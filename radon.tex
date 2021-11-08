@@ -1,0 +1,252 @@
+% Document setup
+\documentclass[article, a4paper, 11pt, oneside]{memoir}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[UKenglish]{babel}
+
+% Document info
+\newcommand\doctitle{Radon Measures}
+\newcommand\docauthor{Danny Nygård Hansen}
+
+% Formatting and layout
+\usepackage[autostyle]{csquotes}
+\usepackage[final]{microtype}
+\usepackage{xcolor}
+\frenchspacing
+\usepackage{latex-sty/articlepagestyle}
+\usepackage{latex-sty/articlesectionstyle}
+
+% Fonts
+\usepackage[largesmallcaps,partialup]{kpfonts}
+\DeclareSymbolFontAlphabet{\mathrm}{operators} % https://tex.stackexchange.com/questions/40874/kpfonts-siunitx-and-math-alphabets
+\linespread{1.06}
+\let\mathfrak\undefined
+\usepackage{eufrak}
+\usepackage{inconsolata}
+\usepackage{amssymb}
+
+% Hyperlinks
+\usepackage{hyperref}
+\definecolor{linkcolor}{HTML}{4f4fa3}
+\hypersetup{%
+	pdftitle=\doctitle,
+	pdfauthor=\docauthor,
+	colorlinks,
+	linkcolor=linkcolor,
+	citecolor=linkcolor,
+	urlcolor=linkcolor,
+	bookmarksnumbered=true
+}
+
+% Equation numbering
+\numberwithin{equation}{chapter}
+
+% Footnotes
+\footmarkstyle{\textsuperscript{#1}\hspace{0.25em}}
+
+% Mathematics
+\usepackage{latex-sty/basicmathcommands}
+\usepackage{latex-sty/framedtheorems}
+\usepackage{latex-sty/topologycommands}
+\usepackage{tikz-cd}
+\usetikzlibrary{babel}
+
+% Lists
+\usepackage{enumitem}
+\setenumerate[0]{label=\normalfont(\arabic*)}
+
+% Bibliography
+\usepackage[backend=biber, style=authoryear, maxcitenames=2, useprefix]{biblatex}
+\addbibresource{references.bib}
+
+% Title
+\title{\doctitle}
+\author{\docauthor}
+
+
+% Section style -- add to section style .sty?
+\setsubsecheadstyle{\normalfont\itshape}
+
+
+% Preimage -- to be added to mathcommands .sty
+\newcommand{\preim}{^{-1}}
+
+
+\newcommand{\calN}{\mathcal{N}}
+\DeclarePairedDelimiter{\nhoodfilteraux}{(}{)}
+% \newcommand{\nhoodfilter}[1]{\calN\nhoodfilteraux{#1}}
+\newcommand{\nhoodfilter}[1]{\calN_{#1}}
+
+
+\newcommand{\calU}{\mathcal{U}}
+\newcommand{\calV}{\mathcal{V}}
+\newcommand{\calW}{\mathcal{W}}
+\newcommand{\calT}{\mathcal{T}}
+\newcommand{\calB}{\mathcal{B}}
+
+\newcommand{\borel}[1]{\calB(#1)}
+
+\begin{document}
+
+\maketitle
+
+\chapter{Introduction}
+
+
+\chapter{General properties of measures}
+
+We assume that the reader is familiar with abstract measure spaces and topological spaces. Below we fix terminology and prove some elementary results.
+
+Below we let $X$ denote a Hausdorff topological space. A \emph{Borel measure} on $X$ is a measure on the Borel $\sigma$-algebra $\borel{X}$ of $X$. A Borel measure $\mu$ on $X$ is called \emph{outer regular} on a set $B \in \borel{X}$ if
+%
+\begin{equation*}
+    \mu(B)
+        = \inf \set{\mu(U)}{U \supseteq B, \text{$U$ open}},
+\end{equation*}
+%
+and \emph{inner regular} on $B$ if
+%
+\begin{equation*}
+    \mu(B)
+        = \sup \set{\mu(K)}{K \subseteq B, \text{$K$ compact}}.
+\end{equation*}
+%
+If $\mu$ is outer (inner) regular on all Borel sets, then we call it \emph{outer (inner) regular}. If $\mu$ is both outer and inner regular, then it is simply called \emph{regular}.
+
+A Borel measure $\mu$ on $X$ is called \emph{locally finite} if every point has a neighbourhood $U$ with $\mu(U) < \infty$. We have the following characterisation of local finiteness:
+
+\begin{proposition}
+    If a Borel measure on $X$ is locally finite, then it is finite on all compact sets. The converse is also true if $X$ is locally compact.
+\end{proposition}
+
+\begin{proof}
+    Let $\mu$ be a locally finite Borel measure on $X$, and let $K \subseteq X$ be compact. Every $x \in K$ has an open neighbourhood $U_x$ with $\mu(U_x) < \infty$. The collection $\set{U_x}{x \in K}$ is an open cover of $K$, so it has a finite subcover, say $U_{x_1}, \ldots, U_{x_n}$. But then
+    %
+    \begin{equation*}
+        \mu(K)
+            \leq \mu \Bigl( \bigunion_{i=1}^n U_{x_i} \Bigr)
+            \leq \sum_{i=1}^n \mu(U_{x_i})
+            < \infty,
+    \end{equation*}
+    %
+    as desired.
+
+    Conversely, suppose that $X$ is locally compact and that $\mu$ is a Borel measure that is finite on compact sets. Then every point has a compact neighbourhood, so every point has a neighbourhood on which $\mu$ is finite. Hence $\mu$ is locally finite.
+\end{proof}
+
+\newcommand{\calJ}{\mathcal{J}}
+\newcommand{\powerset}[1]{2^{#1}}
+
+If $\calJ \subseteq \powerset{X}$ and $\mu \colon \calJ \to [0,\infty]$ such that $\emptyset \in \calJ$ and $\mu(\emptyset) = 0$, then $\mu$ gives rise to an outer measure $\mu^*$ on $X$ by
+%
+\begin{equation*}
+    \mu^*(A)
+        = \inf \set[\Big]{
+            \sum_{n=1}^\infty \mu(B_n)
+        }{
+            (B_n)_{n \in \naturals} \subseteq \calJ
+            \text{ and }
+            A \subseteq \bigunion_{n \in \naturals} B_n
+        }.
+\end{equation*}
+%
+In the case that $\mu$ is a measure and $\calJ$ is a $\sigma$-algebra, we may rephrase this as
+%
+\begin{equation*}
+    \mu^*(A)
+        = \inf \set{
+            \mu(B)
+        }{
+            B \in \calJ
+            \text{ and }
+            A \subseteq B
+        }.
+\end{equation*}
+%
+In this case we also have $\mu^*(A) = \mu(A)$ if $A \in \calJ$.
+
+\begin{definition}
+    Let $m$ and $M$ be Borel measures on $X$. We say that $m$ is the \emph{essential measure} associated with $M$ if
+    %
+    \begin{equation*}
+        % \label{eq:essential-measure-definition}
+        m(A)
+            = \sup \set{ M^*(B) }{ B \subseteq A \text{ and } M^*(B) < \infty },
+    \end{equation*}
+    %
+    for all $A \in \borel{X}$.
+\end{definition}
+
+
+\begin{lemma}
+    If $m$ and $M$ are Borel measures on $X$ and $m$ is the essential measure associated with $M$, then $m(A) = M(A)$ when $M(A) < \infty$ or $m(A) = \infty$, and
+    %
+    \begin{equation}
+        \label{eq:essential-measure-equivalent-formula}
+        m(A)
+            = \sup \set{ M(B) }{ B \in \borel{X}, B \subseteq A \text{ and } M(B) < \infty },
+    \end{equation}
+    %
+    for all $A \in \borel{X}$.
+\end{lemma}
+
+\begin{proof}
+    Let $A \in \borel{X}$, and assume that $M(A) < \infty$. Then $m(A) = M^*(A) = M(A) < \infty$. For $\epsilon > 0$ there exists a $B \subseteq A$ such that
+    %
+    \begin{equation*}
+        m(A)
+            \leq M^*(B) + \epsilon
+            \leq M(A) + \epsilon,
+    \end{equation*}
+    %
+    and since $\epsilon$ was arbitrary, it follows that $m(A) \leq M(A)$. Conversely,
+    %
+    \begin{equation*}
+        m(A)
+            \geq M^*(A)
+            = M(A),
+    \end{equation*}
+    %
+    so in total $m(A) = M(A)$. With this \eqref{eq:essential-measure-equivalent-formula} is obvious when $M(A) < \infty$.
+
+    Now assume that $m(A) = \infty$. Then for any $R > 0$ there exists a $B \subseteq A$ such that $M^*(B) \geq R$. Now let $C \in \borel{X}$ such that $B \subseteq C$ and $M(C) < \infty$. Then $B \subseteq A \intersect C \subseteq A$, so
+    %
+    \begin{equation*}
+        R
+            \leq M^*(B)
+            \leq M(A \intersect C)
+            \leq m(A).
+    \end{equation*}
+    %
+    Since $R$ was arbitrary, $M$ can take on arbitrarily large but finite values on subsets of $A$, so \eqref{eq:essential-measure-equivalent-formula} follows. It also follows that $M(A) = \infty$.
+\end{proof}
+
+
+\chapter{Radon measures}
+
+Let $X$ be a Hausdorff topological space.
+
+\begin{definition}[Radon measures, $R_1$]
+    A Radon measure on $X$ is a pair of measures $(M,m)$ on $\borel{X}$ such that
+    %
+    \begin{enumdef}
+        \item $m$ is the essential measure associated with $M$,
+
+        \item $M$ is locally finite and outer regular,
+
+        \item $m$ is inner regular, and
+
+        \item $m(B) = M(B)$ for $B \in \borel{X}$ if $B$ is open or $M(B) < \infty$.
+    \end{enumdef}
+\end{definition}
+
+\begin{definition}[Radon measures, $R_2$]
+    A Radon measure on $X$ is a measure $M$ on $\borel{X}$ that is locally finite, outer regular, and inner regular on open sets.
+\end{definition}
+
+\begin{definition}[Radon measures, $R_3$]
+    A Radon measure on $X$ is a measure $m$ on $\borel{X}$ that is locally finite and inner regular.
+\end{definition}
+
+
+\end{document}
