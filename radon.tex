@@ -85,6 +85,7 @@
 \newcommand{\calB}{\mathcal{B}}
 
 \newcommand{\borel}[1]{\calB(#1)}
+\DeclareMathOperator{\supp}{supp}
 
 \begin{document}
 
@@ -179,6 +180,7 @@ In this case we also have $\mu^*(A) = \mu(A)$ if $A \in \calJ$.
 
 
 \begin{lemma}
+    \label{thm:essential-measure-equivalent-formula}
     If $m$ and $M$ are Borel measures on $X$ and $m$ is the essential measure associated with $M$, then $m(A) = M(A)$ when $M(A) < \infty$ or $m(A) = \infty$, and
     %
     \begin{equation}
@@ -222,6 +224,7 @@ In this case we also have $\mu^*(A) = \mu(A)$ if $A \in \calJ$.
 \end{proof}
 
 
+
 \chapter{Radon measures}
 
 Let $X$ be a Hausdorff topological space.
@@ -247,6 +250,37 @@ Let $X$ be a Hausdorff topological space.
 \begin{definition}[Radon measures, $R_3$]
     A Radon measure on $X$ is a measure $m$ on $\borel{X}$ that is locally finite and inner regular.
 \end{definition}
+
+
+Now let $X$ be a locally compact Hausdorff space, and let $C_c(X)$ denote the space of continuous complex-valued functions on $X$. A linear functional $I$ on $C_c(X)$ is said to be \emph{positive} if $I(f) \geq 0$ when $f \geq 0$. A Borel measure $\mu$ on $X$ is called a \emph{representing measure} for $I$ if $I(f) = \int f \dif\mu$ for all $f \in C_c(X)$.
+
+\begin{theorem}[The Riesz Representation Theorem]
+    Every positive linear functional on $C_c(X)$ has a unique $R_2$-Radon representing measure.
+\end{theorem}
+
+\begin{proof}
+    \textcite[Theorem~7.2]{folland2007}
+\end{proof}
+
+\begin{proposition}
+    Let $I$ be a positive linear functional on $X$, and let $M$ be the $R_2$-Radon representing measure for $I$. If $m$ is the essential measure associated with $M$, then $m$ is also a representing measure for $I$. [Uniqueness?]
+\end{proposition}
+
+\begin{proof}
+    This amounts to showing that
+    %
+    \begin{equation*}
+        \int f \dif m = \int f \dif M
+    \end{equation*}
+    %
+    for all $f \in C_c(X)$. Pick one such $f$, and let $K = \supp f$. Since $K$ is compact and both $m$ and $M$ are locally finite, \cref{thm:essential-measure-equivalent-formula} implies that $m$ and $M$ agree when restricted to $K$. The claim follows.
+\end{proof}
+
+
+
+\nocite{*}
+
+\printbibliography
 
 
 \end{document}
