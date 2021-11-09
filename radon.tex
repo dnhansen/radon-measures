@@ -83,6 +83,7 @@
 \newcommand{\calW}{\mathcal{W}}
 \newcommand{\calT}{\mathcal{T}}
 \newcommand{\calB}{\mathcal{B}}
+\newcommand{\calE}{\mathcal{E}}
 
 \newcommand{\borel}[1]{\calB(#1)}
 \DeclareMathOperator{\supp}{supp}
@@ -98,42 +99,8 @@
 
 We assume that the reader is familiar with abstract measure spaces and topological spaces. Below we fix terminology and prove some elementary results.
 
-Below we let $X$ denote a Hausdorff topological space. A \emph{Borel measure} on $X$ is a measure on the Borel $\sigma$-algebra $\borel{X}$ of $X$. A Borel measure $\mu$ on $X$ is called \emph{outer regular} on a set $B \in \borel{X}$ if
-%
-\begin{equation*}
-    \mu(B)
-        = \inf \set{\mu(U)}{U \supseteq B, \text{$U$ open}},
-\end{equation*}
-%
-and \emph{inner regular} on $B$ if
-%
-\begin{equation*}
-    \mu(B)
-        = \sup \set{\mu(K)}{K \subseteq B, \text{$K$ compact}}.
-\end{equation*}
-%
-If $\mu$ is outer (inner) regular on all Borel sets, then we call it \emph{outer (inner) regular}. If $\mu$ is both outer and inner regular, then it is simply called \emph{regular}.
 
-A Borel measure $\mu$ on $X$ is called \emph{locally finite} if every point has a neighbourhood $U$ with $\mu(U) < \infty$. We have the following characterisation of local finiteness:
-
-\begin{proposition}
-    If a Borel measure on $X$ is locally finite, then it is finite on all compact sets. The converse is also true if $X$ is locally compact.
-\end{proposition}
-
-\begin{proof}
-    Let $\mu$ be a locally finite Borel measure on $X$, and let $K \subseteq X$ be compact. Every $x \in K$ has an open neighbourhood $U_x$ with $\mu(U_x) < \infty$. The collection $\set{U_x}{x \in K}$ is an open cover of $K$, so it has a finite subcover, say $U_{x_1}, \ldots, U_{x_n}$. But then
-    %
-    \begin{equation*}
-        \mu(K)
-            \leq \mu \Bigl( \bigunion_{i=1}^n U_{x_i} \Bigr)
-            \leq \sum_{i=1}^n \mu(U_{x_i})
-            < \infty,
-    \end{equation*}
-    %
-    as desired.
-
-    Conversely, suppose that $X$ is locally compact and that $\mu$ is a Borel measure that is finite on compact sets. Then every point has a compact neighbourhood, so every point has a neighbourhood on which $\mu$ is finite. Hence $\mu$ is locally finite.
-\end{proof}
+\section{Essential measures}
 
 \newcommand{\calJ}{\mathcal{J}}
 \newcommand{\powerset}[1]{2^{#1}}
@@ -166,8 +133,8 @@ In the case that $\mu$ is a measure and $\calJ$ is a $\sigma$-algebra, we may re
 %
 In this case we also have $\mu^*(A) = \mu(A)$ if $A \in \calJ$.
 
-\begin{definition}
-    Let $m$ and $M$ be Borel measures on $X$. We say that $m$ is the \emph{essential measure} associated with $M$ if
+\begin{definition}[Essential measures]
+    Let $(X, \calE, M)$ be a measure space. We say that a map $m \colon \borel{X} \to [0,\infty]$ is the \emph{essential measure} associated with $M$ if
     %
     \begin{equation*}
         % \label{eq:essential-measure-definition}
@@ -175,52 +142,102 @@ In this case we also have $\mu^*(A) = \mu(A)$ if $A \in \calJ$.
             = \sup \set{ M^*(B) }{ B \subseteq A \text{ and } M^*(B) < \infty },
     \end{equation*}
     %
-    for all $A \in \borel{X}$.
+    for all $A \in \calE$.
 \end{definition}
 
 
 \begin{lemma}
     \label{thm:essential-measure-equivalent-formula}
-    If $m$ and $M$ are Borel measures on $X$ and $m$ is the essential measure associated with $M$, then $m(A) = M(A)$ when $M(A) < \infty$ or $m(A) = \infty$, and
+    If $(X,\calE,M)$ is a measure space and $m$ is the essential measure associated with $M$, then $m(A) = M(A)$ when $M(A) < \infty$ or $m(A) = \infty$, and
     %
     \begin{equation}
         \label{eq:essential-measure-equivalent-formula}
         m(A)
-            = \sup \set{ M(B) }{ B \in \borel{X}, B \subseteq A \text{ and } M(B) < \infty },
+            = \sup \set{ M(B) }{ B \in \calE, B \subseteq A \text{ and } M(B) < \infty },
     \end{equation}
     %
-    for all $A \in \borel{X}$.
+    for all $A \in \calE$. Furthermore, $m$ is a measure on $\calE$.
 \end{lemma}
 
 \begin{proof}
-    Let $A \in \borel{X}$, and assume that $M(A) < \infty$. Then $m(A) = M^*(A) = M(A) < \infty$. For $\epsilon > 0$ there exists a $B \subseteq A$ such that
-    %
-    \begin{equation*}
-        m(A)
-            \leq M^*(B) + \epsilon
-            \leq M(A) + \epsilon,
-    \end{equation*}
-    %
-    and since $\epsilon$ was arbitrary, it follows that $m(A) \leq M(A)$. Conversely,
-    %
-    \begin{equation*}
-        m(A)
-            \geq M^*(A)
-            = M(A),
-    \end{equation*}
-    %
-    so in total $m(A) = M(A)$. With this \eqref{eq:essential-measure-equivalent-formula} is obvious when $M(A) < \infty$.
+    Let $A \in \calE$, and assume that $M(A) < \infty$. Then $M^*(A) = M(A) < \infty$ by the definition of the outer measure $M^*$, so $m(A) = M^*(A)$ by definition on $m$. With this, \eqref{eq:essential-measure-equivalent-formula} is obvious when $M(A) < \infty$.
 
-    Now assume that $m(A) = \infty$. Then for any $R > 0$ there exists a $B \subseteq A$ such that $M^*(B) \geq R$. Now let $C \in \borel{X}$ such that $B \subseteq C$ and $M(C) < \infty$. Then $B \subseteq A \intersect C \subseteq A$, so
+    Now assume that $m(A) = \infty$. Then for any $R > 0$ there exists a $B \subseteq A$ such that $M^*(B) \geq R$. Now let $C \in \calE$ such that $B \subseteq C$ and $M(C) < \infty$. Then $B \subseteq A \intersect C \subseteq A$, so
     %
     \begin{equation*}
         R
             \leq M^*(B)
             \leq M(A \intersect C)
-            \leq m(A).
+            < \infty.
     \end{equation*}
     %
     Since $R$ was arbitrary, $M$ can take on arbitrarily large but finite values on subsets of $A$, so \eqref{eq:essential-measure-equivalent-formula} follows. It also follows that $M(A) = \infty$.
+
+    Finally we show that $m$ is a Borel measure on $X$. Let $(A_n)_{n \in \naturals}$ be a sequence of pairwise disjoint sets in $\calE$, and let $B \subseteq \bigunion_{n \in \naturals} A_n$ be such that $M(B) < \infty$. If we let $B_n = B \intersect A_n$, then
+    %
+    \begin{equation*}
+        M(B)
+            = M \Bigl( \bigunion_{n \in \naturals} B_n \Bigr)
+            = \sum_{n=1}^\infty M(B_n)
+            \leq \sum_{n=1}^\infty m(A_n),
+    \end{equation*}
+    %
+    where the inequality follows since $B_n \subseteq A_n$ and $M(B_n) < \infty$. This inequality holds for all $B \subseteq \bigunion_{n \in \naturals} A_n$, so taking the supremum over such $B$ yields
+    %
+    \begin{equation*}
+        m \Bigl( \bigunion_{n \in \naturals} A_n \Bigr)
+            \leq \sum_{n=1}^\infty m(A_n).
+    \end{equation*}
+    %
+    We prove the opposite inequality. If the left-hand side is infinite this is obvious, so assume that it is finite. For $\epsilon > 0$ there is then a sequence $(C_n)_{n \in \naturals}$ in $\calE$ with $C_n \subseteq A_n$ and $M(C_n) < \infty$ such that $m(A_n) \leq M(C_n) + \epsilon/2^n$. It follows that
+    %
+    \begin{equation*}
+        \sum_{n=1}^\infty m(A_n)
+            \leq \sum_{n=1}^\infty M(C_n) + \epsilon
+            \leq \sum_{n=1}^\infty m(A_n) + \epsilon,
+    \end{equation*}
+    %
+    and since $\epsilon$ was arbitrary, the inequality follows.
+\end{proof}
+
+
+\section{Borel measures on Hausdorff spaces}
+
+Below we let $X$ denote a Hausdorff topological space. A \emph{Borel measure} on $X$ is a measure on the Borel $\sigma$-algebra $\borel{X}$ of $X$. A Borel measure $\mu$ on $X$ is called \emph{outer regular} on a set $B \in \borel{X}$ if
+%
+\begin{equation*}
+    \mu(B)
+        = \inf \set{\mu(U)}{U \supseteq B, \text{$U$ open}},
+\end{equation*}
+%
+and \emph{inner regular} on $B$ if
+%
+\begin{equation*}
+    \mu(B)
+        = \sup \set{\mu(K)}{K \subseteq B, \text{$K$ compact}}.
+\end{equation*}
+%
+If $\mu$ is outer (inner) regular on all Borel sets, then we call it \emph{outer (inner) regular}. Furthermore, if $\mu$ is both outer and inner regular, then it is simply called \emph{regular}.
+
+A Borel measure $\mu$ on $X$ is called \emph{locally finite} if every point has a neighbourhood $U$ with $\mu(U) < \infty$. We have the following characterisation of local finiteness:
+
+\begin{proposition}
+    If a Borel measure on $X$ is locally finite, then it is finite on all compact sets. The converse is also true if $X$ is locally compact.
+\end{proposition}
+
+\begin{proof}
+    Let $\mu$ be a locally finite Borel measure on $X$, and let $K \subseteq X$ be compact. Every $x \in K$ has an open neighbourhood $U_x$ with $\mu(U_x) < \infty$. The collection $\set{U_x}{x \in K}$ is an open cover of $K$, so it has a finite subcover, say $U_{x_1}, \ldots, U_{x_n}$. But then
+    %
+    \begin{equation*}
+        \mu(K)
+            \leq \mu \Bigl( \bigunion_{i=1}^n U_{x_i} \Bigr)
+            \leq \sum_{i=1}^n \mu(U_{x_i})
+            < \infty,
+    \end{equation*}
+    %
+    as desired.
+
+    Conversely, suppose that $X$ is locally compact and that $\mu$ is a Borel measure that is finite on compact sets. Then every point has a compact neighbourhood, so every point has a neighbourhood on which $\mu$ is finite. Hence $\mu$ is locally finite.
 \end{proof}
 
 
@@ -250,6 +267,15 @@ Let $X$ be a Hausdorff topological space.
 \begin{definition}[Radon measures, $R_3$]
     A Radon measure on $X$ is a measure $m$ on $\borel{X}$ that is locally finite and inner regular.
 \end{definition}
+
+
+\begin{theorem}
+    \begin{enumthm}
+        \item Let $(M,n)$ be an $R_1$-Radon measure on $X$. Then $M$ is an $R_2$-Radon measure, and $m$ is an $R_3$-Radon measure.
+
+        \item Let $M$ be an $R_2$-Radon measure on $X$. Then 
+    \end{enumthm}
+\end{theorem}
 
 
 Now let $X$ be a locally compact Hausdorff space, and let $C_c(X)$ denote the space of continuous complex-valued functions on $X$. A linear functional $I$ on $C_c(X)$ is said to be \emph{positive} if $I(f) \geq 0$ when $f \geq 0$. A Borel measure $\mu$ on $X$ is called a \emph{representing measure} for $I$ if $I(f) = \int f \dif\mu$ for all $f \in C_c(X)$.
