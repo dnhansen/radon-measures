@@ -272,6 +272,85 @@ A Borel measure $\mu$ on $X$ is called \emph{locally finite} if every point has 
 \end{proof}
 
 
+\section{Borel measures on Polish spaces}
+
+\begin{lemma}
+    Let $\mu$ be a finite Borel measure on a metrisable space $X$. Then $\mu$ is outer regular, and for all $A \in \borel{X}$ we have
+    %
+    \begin{equation}
+        \label{eq:closed-inner-regularity}
+        \mu(A)
+            = \sup \set{\mu(F)}{ \text{$F \subseteq A$ and $F$ is closed} }.
+    \end{equation}
+\end{lemma}
+%
+Thus such a measure $\mu$ is \emph{almost} inner regular. In [reference] we will see that $\mu$ is indeed regular on Polish spaces.
+
+\newcommand{\calA}{\mathcal{A}}
+
+\begin{proof}
+    We first show that $\mu$ is outer regular. Let $\calA$ be the subcollection of $\borel{X}$ consisting of sets on which $\mu$ is outer regular. Assume first that $A$ is closed and, choosing a metric $\rho$ on $X$, let $A^\delta = \set{x \in X}{\rho(x,A) < \delta}$ for $\delta > 0$. These sets are open and contain $A$, and continuity (and finiteness) of $\mu$ shows that they approximate $A$ from above in measure. Hence $\calA$ contains all closed sets, and it thus suffices to show that $\calA$ is a $\sigma$-algebra.
+
+    It is easy to see that $\calA$ is closed under complementation. Now let $(A_n)_{n \in \naturals}$ be a sequence of sets in $\calA$, and let $\epsilon > 0$. Choose open sets $U_n$ such that $A_n \subseteq U_n$, and such that $\mu(U_n \setminus A_n) \leq \epsilon/2^n$. Letting $U = \bigunion_{n \in \naturals} U_n$ and $A = \bigunion_{n \in \naturals} A_n$ it follows that
+    %
+    \begin{equation*}
+        \mu(U \setminus A)
+            \leq \mu \Bigl( \bigunion_{n \in \naturals} (U_n \setminus A_n) \Bigr)
+            \leq \sum_{n=1}^\infty \mu(U_n \setminus A_n)
+            = \epsilon.
+    \end{equation*}
+    %
+    Since $\epsilon$ was arbitrary, $A \in \calA$, and so $\calA$ is a $\sigma$-algebra.
+
+    Finally we show that $\mu$ satisfies \eqref{eq:closed-inner-regularity}. Let $A \in \borel{X}$, and let $\epsilon > 0$. Then $A^c$ is also a Borel set, so there is an open set $U \supseteq A^c$ such that $\mu(U \setminus A^c) < \epsilon$. But $U \setminus A^c = A \setminus U^c$, and $U^c$ is a closed set contained in $A$, proving \eqref{eq:closed-inner-regularity}.
+\end{proof}
+%
+The proof yields more than the theorem, namely that any outer regular Borel measure $\mu$ on \emph{any} topological space $X$ has the property \eqref{eq:closed-inner-regularity}. We shall not need this fact in the sequel.
+
+
+\begin{lemma}
+    Every finite Borel measure $\mu$ on a Polish space $X$ is regular.
+\end{lemma}
+
+\begin{proof}
+    It suffices to prove for every $\epsilon > 0$ the existence of a compact set $K \subseteq X$ such that $\mu(X \setminus K) \leq \epsilon$ (i.e. that $\mu$ is \emph{tight}). If $A \in \borel{X}$, then [ref] there is a closed set $F \subseteq A$ such that $\mu(A \setminus F) \leq \epsilon$. But then
+    %
+    \begin{equation*}
+        A \setminus (K \intersect F)
+            = (A \setminus K) \union (A \setminus F)
+            \subseteq (X \setminus K) \union (A \setminus F),
+    \end{equation*}
+    %
+    and hence $\mu(A \setminus (K \intersect F)) \leq 2\epsilon$.
+
+    Let $\epsilon > 0$. Since $X$ is Lindelöf there is for every $k \in \naturals$ a sequence $(B_n^k)_{n \in \naturals}$ of open balls of radius $1/k$ covering $X$. By continuity of $\mu$ there exists for each $k$ an $N_k \in \naturals$ such that
+    %
+    \begin{equation*}
+        \mu(X)
+            \leq \mu \Bigl( \bigunion_{n \leq N_k} B_n^k \Bigr) + \frac{\epsilon}{2^k},
+    \end{equation*}
+    %
+    or in other words such that the complement of $\bigunion_{n \leq N_k} B_n^k$ has measure less than $\epsilon/2^k$. Now let
+    %
+    \begin{equation*}
+        A
+            = \bigintersect_{k \in \naturals}
+              \bigunion_{n \leq N_k} B_n^k.
+    \end{equation*}
+    %
+    It is easy to see that $A$ is totally bounded. It then follows that $A$ is precompact since $X$ is complete. Furthermore,
+    %
+    \begin{equation*}
+        \mu(X \setminus \closure{A})
+            \leq \mu(X \setminus A)
+            \leq \sum_{n=1}^\infty \mu \Bigl( X \setminus \bigunion_{n \leq N_k} B_n^k \Bigr)
+            \leq \epsilon.
+    \end{equation*}
+    %
+    This proves the claim.
+\end{proof}
+
+
 \chapter{Radon measures}
 
 \section{Definitions and basic properties}
@@ -449,7 +528,7 @@ We denote the set of outer Radon measures on $X$ by $\radonout(X)$ and the set o
 A Radon pair is what \textcite{schwartz1973} describes in his $R_1$ definition of Radon measures.
 
 
-\section{The Riesz Representation Theorem}
+\section{Locally compact Hausdorff spaces}
 
 Now let $X$ be a locally compact Hausdorff space, and let $C_c(X)$ denote the space of continuous complex-valued functions on $X$. A linear functional $I$ on $C_c(X)$ is said to be \emph{positive} if $I(f) \geq 0$ when $f \geq 0$. A Borel measure $\mu$ on $X$ is called a \emph{representing measure} for $I$ if $I(f) = \int f \dif\mu$ for all $f \in C_c(X)$.
 
@@ -462,7 +541,7 @@ Now let $X$ be a locally compact Hausdorff space, and let $C_c(X)$ denote the sp
 \end{proof}
 
 \begin{proposition}
-    Let $(\mu,\nu)$ be a Radon pair on $X$, and let $I$ be a positive linear functional on $C_c(X)$. Then $\mu$ is a representing measure for $I$ if and only if $\nu$ is. [Uniqueness?]
+    Let $(\mu,\nu)$ be a Radon pair on $X$, and let $I$ be a positive linear functional on $C_c(X)$. Then $\mu$ is a representing measure for $I$ if and only if $\nu$ is. In particular, $I$ has a unique inner Radon representing measure.
 \end{proposition}
 
 \begin{proof}
@@ -473,6 +552,8 @@ Now let $X$ be a locally compact Hausdorff space, and let $C_c(X)$ denote the sp
     \end{equation*}
     %
     for all $f \in C_c(X)$. Pick one such $f$, and let $K = \supp f$. Since $K$ is compact and both $\nu$ and $\mu$ are locally finite, \cref{thm:essential-measure-equivalent-formula} implies that $\nu$ and $\mu$ agree when restricted to $K$. The claim follows.
+
+    The final claim follows since $\mu$ is the unique outer Radon representing measure, and \cref{thm:Radon-pair-inverses} furnishes a bijection between inner and outer Radon measures on $X$. % Elementary proof as well? Bauer 29.3
 \end{proof}
 
 
