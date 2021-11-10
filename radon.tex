@@ -160,7 +160,7 @@ In this case we also have $\mu^*(A) = \mu(A)$ if $A \in \calJ$.
 \end{lemma}
 
 \begin{proof}
-    Let $A \in \calE$, and assume that $M(A) < \infty$. Then $M^*(A) = M(A) < \infty$ by the definition of the outer measure $M^*$, so $m(A) = M^*(A)$ by definition on $m$. With this, \eqref{eq:essential-measure-equivalent-formula} is obvious when $M(A) < \infty$.
+    Let $A \in \calE$, and assume that $M(A) < \infty$. Then $M^*(A) = M(A) < \infty$ by the definition of the outer measure $M^*$, so $m(A) = M^*(A)$ by the definition of $m$. With this, \eqref{eq:essential-measure-equivalent-formula} is obvious when $M(A) < \infty$.
 
     Now assume that $m(A) = \infty$. Then for any $R > 0$ there exists a $B \subseteq A$ such that $M^*(B) \geq R$. Now let $C \in \calE$ such that $B \subseteq C$ and $M(C) < \infty$. Then $B \subseteq A \intersect C \subseteq A$, so
     %
@@ -197,7 +197,7 @@ In this case we also have $\mu^*(A) = \mu(A)$ if $A \in \calJ$.
             \leq \sum_{n=1}^\infty m(A_n) + \epsilon,
     \end{equation*}
     %
-    and since $\epsilon$ was arbitrary, the inequality follows.
+    and since $\epsilon$ was arbitrary, the inequality follows. [Something's missing here?]
 \end{proof}
 
 
@@ -222,6 +222,7 @@ If $\mu$ is outer (inner) regular on all Borel sets, then we call it \emph{outer
 A Borel measure $\mu$ on $X$ is called \emph{locally finite} if every point has a neighbourhood $U$ with $\mu(U) < \infty$. We have the following characterisation of local finiteness:
 
 \begin{proposition}
+    \label{thm:local-finiteness-compacts}
     If a Borel measure on $X$ is locally finite, then it is finite on all compact sets. The converse is also true if $X$ is locally compact.
 \end{proposition}
 
@@ -237,8 +238,10 @@ A Borel measure $\mu$ on $X$ is called \emph{locally finite} if every point has 
     %
     as desired.
 
-    Conversely, suppose that $X$ is locally compact and that $\mu$ is a Borel measure that is finite on compact sets. Then every point has a compact neighbourhood, so every point has a neighbourhood on which $\mu$ is finite. Hence $\mu$ is locally finite.
+    Conversely, suppose that $X$ is locally compact and that $\mu$ is a Borel measure on $X$ that is finite on compact sets. Then every point has a compact neighbourhood, so every point has a neighbourhood on which $\mu$ is finite. Hence $\mu$ is locally finite.
 \end{proof}
+
+Above we defined 
 
 
 
@@ -271,11 +274,137 @@ Let $X$ be a Hausdorff topological space.
 
 \begin{theorem}
     \begin{enumthm}
-        \item Let $(M,n)$ be an $R_1$-Radon measure on $X$. Then $M$ is an $R_2$-Radon measure, and $m$ is an $R_3$-Radon measure.
+        \item Let $(M,m)$ be an $R_1$-Radon measure on $X$. Then $M$ is an $R_2$-Radon measure, and $m$ is an $R_3$-Radon measure.
 
-        \item Let $M$ be an $R_2$-Radon measure on $X$. Then 
+        \item Let $M$ be an $R_2$-Radon measure on $X$. If $m$ is the essential measure associated with $M$, then $(M,m)$ is an $R_1$-Radon measure.
+
+        \item Let $m$ be an $R_3$-Radon measure on $X$, and define a map $M \colon \borel{X} \to [0,\infty]$ by
+        %
+        \begin{equation*}
+            M(A)
+                = \inf \set{m(U)}{\text{$U$ open and $A \subseteq U$}}.
+        \end{equation*}
+        %
+        Then $(M,m)$ is an $R_1$-Radon measure on $X$.
     \end{enumthm}
 \end{theorem}
+
+\begin{proof}
+    
+\end{proof}
+
+\newcommand{\calM}{\mathcal{M}}
+\newcommand{\radonout}{\calM^{+}}
+\newcommand{\radonin}{\calM^{-}}
+
+Put this in different terms:
+
+\begin{definition}[Radon measures]
+    An \emph{outer Radon measure} on $X$ is a Borel measure on $X$ that is locally finite, outer regular, and inner regular on open sets.
+
+    An \emph{inner Radon measure} on $X$ is a Borel measure on $X$ that is locally finite and inner regular.
+\end{definition}
+%
+We denote the set of outer Radon measures on $X$ by $\radonout(X)$ and the set of inner Radon measures by $\radonin(X)$. Define maps $E \colon \radonout(X) \to \radonin(X)$ and $P \colon \radonin(X) \to \radonout(X)$, where $E$ maps an outer Radon measure to the corresponding essential measure, and $P$ maps an inner Radon measure to the corresponding principal measure.
+
+
+\begin{lemma}
+    \label{thm:outer-Radon-inner-regular-on-finites}
+    Every outer Radon measure is inner regular on all its $\sigma$-finite sets.
+\end{lemma}
+
+\begin{proof}
+    \textcite[Proposition~7.5]{folland2007}. [Folland assumes local compactness, is this a problem? If it is, Schwartz has a proof in the finite case which is all I need.]
+\end{proof}
+
+% Add to framedtheorems.sty
+\newcommand{\mylistlabelfont}[1]{{\normalfont\color{linkcolor}\textit{#1}:}}
+\newlist{proofsec}{description}{1}
+\setlist[proofsec]{leftmargin=0pt, parsep=0pt, listparindent=\parindent, font=\mylistlabelfont}
+
+\begin{theorem}
+    The maps $E$ and $P$ are well-defined and each other's inverses.
+\end{theorem}
+
+\begin{proof}
+\begin{proofsec}
+    \item[Well-definition of $E$]
+    Let $\mu$ be an outer Radon measure on $X$, and let $\nu$ be the associated essential measure. If $A \in \borel{X}$ and $\mu(A) < \infty$, then $\mu$ is inner regular on $A$ by \cref{thm:outer-Radon-inner-regular-on-finites}. But since $\mu$ and $\nu$ agree on sets with finite $\mu$-measure, $\nu$ is also inner regular on $A$.
+
+    Similarly, every point in $X$ has a neighbourhood with finite $\mu$-measure, so this neighbourhood also has finite $\nu$-measure. Thus $\nu$ is an inner Radon measure.
+
+    \item[Well-definition of $P$]
+    Let $\nu$ be an inner Radon measure on $X$ with associated principal measure $\mu$. We first show that $\mu$ and $\nu$ agree on $\mu$-finite sets, so let $A \in \borel{X}$ with $\mu(A) < \infty$. Clearly $\nu(A) \leq \mu(A)$, so we prove the other inequality. Let $U \supseteq A$ be an open set with $\nu(U) < \infty$. Then also $\nu(U \setminus A) < \infty$, so for $\epsilon > 0$ there exists a compact set $K \subseteq U \setminus A$ with $\nu(U \setminus A) \leq \nu(K) + \epsilon$ by inner regularity. Then $V = U \setminus K$ is an open set containing $A$, so
+    %
+    \begin{equation*}
+        \mu(A)
+            \leq \nu(V)
+            = \nu(A) + \nu(U \setminus A) - \nu(K)
+            \leq \nu(A) + \epsilon.
+    \end{equation*}
+    %
+    Since $\epsilon$ was arbitrary, it follows that $\mu(A) \leq \nu(A)$.
+
+    Next we show that $\mu$ is $\sigma$-additive, so let $(A_n)_{n \in \naturals}$ be a sequence of disjoints sets in $\borel{X}$. For $\epsilon > 0$ there exists a sequence $(U_n)_{n \in \naturals}$ of open sets with $A_n \subseteq U_n$ such that $\nu(U_n) \leq \mu(A_n) + \epsilon$. It follows that
+    %
+    \begin{equation*}
+        \mu \Bigl( \bigunion_{n \in \naturals} A_n \Bigr)
+            \leq \nu \Bigl( \bigunion_{n \in \naturals} U_n \Bigr)
+            = \sum_{n=1}^\infty \nu(U_n)
+            \leq \sum_{n=1}^\infty \mu(A_n) + \epsilon.
+    \end{equation*}
+    %
+    So $\mu$ is countably subadditive since $\epsilon$ was arbitrary. The opposite inequality is obvious if $\mu( \bigunion_{n \in \naturals} A_n ) = \infty$, and if not then the sets $A_n$ also have finite $\mu$-measure. Hence
+    %
+    \begin{equation*}
+        \mu \Bigl( \bigunion_{n \in \naturals} A_n \Bigr)
+            = \nu \Bigl( \bigunion_{n \in \naturals} A_n \Bigr)
+            = \sum_{n=1}^\infty \nu(A_n)
+            = \sum_{n=1}^\infty \mu(A_n).
+    \end{equation*}
+    %
+    Thus $\mu$ is in fact a measure.
+
+    Finally, $\mu$ is clearly locally finite since $\nu$ is, and since $\mu$ and $\nu$ agree on $\mu$-finite sets, outer regularity follows easily from the definition of $\mu$.
+
+    \item[$P \circ E = \id$]
+    Let $\mu$ be an outer Radon measure, $\nu = E(\mu)$ its corresponding essential measure, and $\mu' = P(\nu)$ the principal measure associated with $\nu$. We must show that $\mu = \mu'$.
+
+    Let $A \in \borel{X}$. Since $\mu$ is outer regular,
+    %
+    \begin{equation*}
+        \mu(A)
+            = \inf \set{\mu(U)}{\text{$U$ open and $A \subseteq U$}}.
+    \end{equation*}
+    %
+    Comparing this with the definition of $\mu'$ and recalling that $\nu \leq \mu$, we find that $\mu'(A) \leq \mu(A)$.
+
+    For the opposite inequality, let $\epsilon > 0$ and let $U \supseteq A$ be an open set such that $\nu(U) \leq \mu'(A) + \epsilon$. Because $\nu(U) = \mu(U)$ by \cref{thm:Radon-agree-on-open-sets}, we have
+    %
+    \begin{equation*}
+        \mu'(A) + \epsilon
+            \geq \nu(U)
+            = \mu(U)
+            \geq \mu(A),
+    \end{equation*}
+    %
+    so it follows that $\mu'(A) \geq \mu(A)$ since $\epsilon$ was arbitrary.
+
+    \item[$E \circ P = \id$]
+    Conversely, let $\nu$ be an inner Radon measure and let $\mu = P(\nu)$ and $\nu' = E(\mu)$. Let $A \in \borel{X}$ and notice that
+    %
+    \begin{align*}
+        \nu(A)
+            &= \sup \set{\nu(K)}{ \text{$K$ compact and $K \subseteq A$} } \\
+            &= \sup \set{\mu(K)}{ \text{$K$ compact and $K \subseteq A$} } \\
+            &= \sup \set{\mu(B)}{ \text{$B \in \borel{X}$, $B \subseteq A$ and $\mu(B) < \infty$} } \\
+            &= \nu'(A).
+    \end{align*}
+    %
+    The second and third equalities follow since $\mu$ is locally finite, hence finite on compact sets by \cref{thm:local-finiteness-compacts}, so $\nu(K) = \mu(K) < \infty$.
+\end{proofsec}
+\end{proof}
+
 
 
 Now let $X$ be a locally compact Hausdorff space, and let $C_c(X)$ denote the space of continuous complex-valued functions on $X$. A linear functional $I$ on $C_c(X)$ is said to be \emph{positive} if $I(f) \geq 0$ when $f \geq 0$. A Borel measure $\mu$ on $X$ is called a \emph{representing measure} for $I$ if $I(f) = \int f \dif\mu$ for all $f \in C_c(X)$.
@@ -285,11 +414,11 @@ Now let $X$ be a locally compact Hausdorff space, and let $C_c(X)$ denote the sp
 \end{theorem}
 
 \begin{proof}
-    \textcite[Theorem~7.2]{folland2007}
+    \textcite[Theorem~7.2]{folland2007}.
 \end{proof}
 
 \begin{proposition}
-    Let $I$ be a positive linear functional on $X$, and let $M$ be the $R_2$-Radon representing measure for $I$. If $m$ is the essential measure associated with $M$, then $m$ is also a representing measure for $I$. [Uniqueness?]
+    Let $(M,m)$ be an $R_1$-Radon measure on $X$, and let $I$ be a positive linear functional on $C_c(X)$. Then $M$ is a representing measure for $I$ if and only if $m$ is. [Uniqueness?]
 \end{proposition}
 
 \begin{proof}
@@ -302,6 +431,64 @@ Now let $X$ be a locally compact Hausdorff space, and let $C_c(X)$ denote the sp
     for all $f \in C_c(X)$. Pick one such $f$, and let $K = \supp f$. Since $K$ is compact and both $m$ and $M$ are locally finite, \cref{thm:essential-measure-equivalent-formula} implies that $m$ and $M$ agree when restricted to $K$. The claim follows.
 \end{proof}
 
+
+Don't know where to put this, but just to write it down:
+
+\begin{definition}[Principal measures]
+    Let $m$ be a measure on a topological space $X$. The \emph{principal measure}\footnotemark{} associated with $m$ is the map $M \colon \borel{X} \to [0,\infty]$ given by
+    %
+    \begin{equation*}
+        M(A)
+            = \inf \set{m(U)}{\text{$U$ open and $A \subseteq U$}}.
+    \end{equation*}
+\end{definition}
+\footnotetext{I do not believe this is standard terminology. \textcite{bauer2001} uses the term \textquote{principal measure} for the $R_2$-Radon measure determined by a positive linear functional, as in Riesz' representation theorem.}
+
+[Is this a measure in general?]
+
+\begin{lemma}
+    \label{thm:Radon-agree-on-open-sets}
+    Let $M$ be an $R_2$-Radon measure on $X$, and let $m$ be the essential measure associated with $M$. Then $m(U) = M(U)$ for all open $U \subseteq X$.
+\end{lemma}
+
+\begin{proof}
+    Let $U \subseteq X$ be open. Since $m \leq M$ in general, we only need to show that $m(U) \geq M(U)$. Since $M$ is inner regular on $U$, there exists a sequence $(K_n)_{n \in \naturals}$ of compact subsets of $U$ such that $M(U) = \lim_{n \to \infty} M(K_n)$. Furthermore, $M(K_n) < \infty$ because $M$ is locally finite, so since $m$ and $M$ agree when $M$ is finite it follows that
+    %
+    \begin{equation*}
+        M(U)
+            = \lim_{n \to \infty} M(K_n)
+            = \lim_{n \to \infty} m(K_n)
+            \leq m(U),
+    \end{equation*}
+    %
+    as desired.
+\end{proof}
+
+\begin{proposition}
+    Let $M$ be an $R_2$-Radon measure on $X$, let $m$ be the essential measure associated with $M$, and let $M'$ be the principal measure associated with $m$. Then $M = M'$. In particular, every $R_2$-Radon measure is the principal measure of some $R_3$-Radon measure.
+\end{proposition}
+
+\begin{proof}
+    Let $A \in \borel{X}$. Since $M$ is outer regular,
+    %
+    \begin{equation*}
+        M(A)
+            = \inf \set{M(U)}{\text{$U$ open and $A \subseteq U$}}.
+    \end{equation*}
+    %
+    Comparing this with the definition of $M'$ and recalling that $m \leq M$, we find that $M'(A) \leq M(A)$.
+
+    For the opposite inequality, let $\epsilon > 0$ and let $U \supseteq A$ be an open set such that $m(U) \leq M'(A) + \epsilon$. Because $m(U) = M(U)$ by [lemma], we have
+    %
+    \begin{equation*}
+        M'(A) + \epsilon
+            \geq m(U)
+            = M(U)
+            \geq M(A),
+    \end{equation*}
+    %
+    so it follows that $M'(A) \geq M(A)$ since $\epsilon$ was arbitrary.
+\end{proof}
 
 
 \nocite{*}
