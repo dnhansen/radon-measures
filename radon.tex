@@ -308,13 +308,26 @@ Put this in different terms:
 We denote the set of outer Radon measures on $X$ by $\radonout(X)$ and the set of inner Radon measures by $\radonin(X)$. Define maps $E \colon \radonout(X) \to \radonin(X)$ and $P \colon \radonin(X) \to \radonout(X)$, where $E$ maps an outer Radon measure to the corresponding essential measure, and $P$ maps an inner Radon measure to the corresponding principal measure.
 
 
-\begin{lemma}
+\begin{proposition}
     \label{thm:outer-Radon-inner-regular-on-finites}
     Every outer Radon measure is inner regular on all its $\sigma$-finite sets.
-\end{lemma}
+\end{proposition}
+%
+This is \textcite[Proposition~7.5]{folland2007}, though Folland only considers Radon measures on locally compact spaces. In fact the claim holds in any Hausdorff space, as the proof below demonstrates.
 
 \begin{proof}
-    \textcite[Proposition~7.5]{folland2007}. [Folland assumes local compactness, is this a problem? If it is, Schwartz has a proof in the finite case which is all I need.]
+    Let $\mu$ be an outer Radon measure on $X$, and let $A \in \borel{X}$. First assume that $\mu(A) < \infty$ and let $\epsilon > 0$. By outer regularity there is an open set $U \supseteq A$ such that $\mu(U) < \mu(A) + \epsilon$, and by inner regularity on $U$ there is a compact set $K \subseteq U$ with $\mu(U) < \mu(K) + \epsilon$. Furthermore, since $\mu(U \setminus A) < \epsilon$ there exists an open set $V \supseteq U \setminus A$ such that $\mu(V) < \epsilon$. Now let $F = K \setminus V$ and notice that $F$ is compact and that $F \subseteq A$. It follows that
+    %
+    \begin{equation*}
+        \mu(F)
+            = \mu(K) - \mu(K \intersect V)
+            > \mu(A) - \epsilon - \mu(V)
+            > \mu(A) - 2\epsilon.
+    \end{equation*}
+    %
+    Hence $\mu$ is inner regular on $A$.
+
+    Now assume that $\mu(A) = \infty$ and that there exists an increasing sequence $(A_n)_{n \in \naturals}$ in $\borel{X}$ with $\mu(A_n) < \infty$, and whose union is $A$. It follows by continuity of $\mu$ that $\mu(A_n) \to \infty$ as $n \to \infty$, so for any $R > 0$ there is an $n \in \naturals$ such that $\mu(A_n) > R$. By inner regularity on $A_n$ there exists a compact set $K \subset A_n$ such that $\mu(K) > R$. Hence $\mu$ is also inner regular on $A$.
 \end{proof}
 
 % Add to framedtheorems.sty
