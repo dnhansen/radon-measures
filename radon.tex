@@ -100,7 +100,7 @@
 We assume that the reader is familiar with abstract measure spaces and topological spaces. Below we fix terminology and prove some elementary results.
 
 
-\section{Essential measures}
+\section{Essential and principal measures}
 
 \newcommand{\calJ}{\mathcal{J}}
 \newcommand{\powerset}[1]{2^{#1}}
@@ -134,13 +134,13 @@ In the case that $\mu$ is a measure and $\calJ$ is a $\sigma$-algebra, we may re
 In this case we also have $\mu^*(A) = \mu(A)$ if $A \in \calJ$.
 
 \begin{definition}[Essential measures]
-    Let $(X, \calE, M)$ be a measure space. We say that a map $m \colon \borel{X} \to [0,\infty]$ is the \emph{essential measure} associated with $M$ if
+    Let $(X, \calE, \mu)$ be a measure space. We say that a map $\nu \colon \borel{X} \to [0,\infty]$ is the \emph{essential measure} associated with $\mu$ if
     %
-    \begin{equation*}
-        % \label{eq:essential-measure-definition}
-        m(A)
-            = \sup \set{ M^*(B) }{ B \subseteq A \text{ and } M^*(B) < \infty },
-    \end{equation*}
+    \begin{equation}
+        \label{eq:essential-measure-definition}
+        \nu(A)
+            = \sup \set{ \mu^*(B) }{ B \subseteq A \text{ and } \mu^*(B) < \infty },
+    \end{equation}
     %
     for all $A \in \calE$.
 \end{definition}
@@ -148,56 +148,68 @@ In this case we also have $\mu^*(A) = \mu(A)$ if $A \in \calJ$.
 
 \begin{lemma}
     \label{thm:essential-measure-equivalent-formula}
-    If $(X,\calE,M)$ is a measure space and $m$ is the essential measure associated with $M$, then $m(A) = M(A)$ when $M(A) < \infty$ or $m(A) = \infty$, and
+    If $(X,\calE,\mu)$ is a measure space and $\nu$ is the essential measure associated with $\mu$, then $\nu(A) = \mu(A)$ when $\mu(A) < \infty$ or $\nu(A) = \infty$, and
     %
     \begin{equation}
         \label{eq:essential-measure-equivalent-formula}
-        m(A)
-            = \sup \set{ M(B) }{ B \in \calE, B \subseteq A \text{ and } M(B) < \infty },
+        \nu(A)
+            = \sup \set{ \mu(B) }{ B \in \calE, B \subseteq A \text{ and } \mu(B) < \infty },
     \end{equation}
     %
-    for all $A \in \calE$. Furthermore, $m$ is a measure on $\calE$.
+    for all $A \in \calE$. Furthermore, $\nu$ is a measure on $\calE$.
 \end{lemma}
+%
+Given this lemma, I have no idea why one would define essential measures by \eqref{eq:essential-measure-definition}, but this is the way it is done in \textcite{schwartz1973} and \textcite{nlab:radon_measure}.
 
 \begin{proof}
-    Let $A \in \calE$, and assume that $M(A) < \infty$. Then $M^*(A) = M(A) < \infty$ by the definition of the outer measure $M^*$, so $m(A) = M^*(A)$ by the definition of $m$. With this, \eqref{eq:essential-measure-equivalent-formula} is obvious when $M(A) < \infty$.
+    Let $A \in \calE$, and assume that $\mu(A) < \infty$. Then $\mu^*(A) = \mu(A) < \infty$ by the definition of the outer measure $\mu^*$, so $\nu(A) = \mu^*(A)$ by the definition of $\nu$. With this, \eqref{eq:essential-measure-equivalent-formula} is obvious when $\mu(A) < \infty$.
 
-    Now assume that $m(A) = \infty$. Then for any $R > 0$ there exists a $B \subseteq A$ such that $M^*(B) \geq R$. Now let $C \in \calE$ such that $B \subseteq C$ and $M(C) < \infty$. Then $B \subseteq A \intersect C \subseteq A$, so
+    Now assume that $\nu(A) = \infty$. Then for any $R > 0$ there exists a $B \subseteq A$ such that $\mu^*(B) \geq R$. Now let $C \in \calE$ such that $B \subseteq C$ and $\mu(C) < \infty$. Then $B \subseteq A \intersect C \subseteq A$, so
     %
     \begin{equation*}
         R
-            \leq M^*(B)
-            \leq M(A \intersect C)
+            \leq \mu^*(B)
+            \leq \mu(A \intersect C)
             < \infty.
     \end{equation*}
     %
-    Since $R$ was arbitrary, $M$ can take on arbitrarily large but finite values on subsets of $A$, so \eqref{eq:essential-measure-equivalent-formula} follows. It also follows that $M(A) = \infty$.
+    Since $R$ was arbitrary, $\mu$ can take on arbitrarily large but finite values on subsets of $A$, so \eqref{eq:essential-measure-equivalent-formula} follows. It also follows that $\mu(A) = \infty$.
 
-    Finally we show that $m$ is a Borel measure on $X$. Let $(A_n)_{n \in \naturals}$ be a sequence of pairwise disjoint sets in $\calE$, and let $B \subseteq \bigunion_{n \in \naturals} A_n$ be such that $M(B) < \infty$. If we let $B_n = B \intersect A_n$, then
+    Finally we show that $\nu$ is a Borel measure on $X$. Let $(A_n)_{n \in \naturals}$ be a sequence of pairwise disjoint sets in $\calE$, and let $B \subseteq \bigunion_{n \in \naturals} A_n$ be such that $\mu(B) < \infty$. If we let $B_n = B \intersect A_n$, then
     %
     \begin{equation*}
-        M(B)
-            = M \Bigl( \bigunion_{n \in \naturals} B_n \Bigr)
-            = \sum_{n=1}^\infty M(B_n)
-            \leq \sum_{n=1}^\infty m(A_n),
+        \mu(B)
+            = \mu \Bigl( \bigunion_{n \in \naturals} B_n \Bigr)
+            = \sum_{n=1}^\infty \mu(B_n)
+            \leq \sum_{n=1}^\infty \nu(A_n),
     \end{equation*}
     %
-    where the inequality follows since $B_n \subseteq A_n$ and $M(B_n) < \infty$. This inequality holds for all $B \subseteq \bigunion_{n \in \naturals} A_n$, so taking the supremum over such $B$ yields
+    where the inequality follows since $B_n \subseteq A_n$ and $\mu(B_n) < \infty$. This inequality holds for all $B \subseteq \bigunion_{n \in \naturals} A_n$, so taking the supremum over such $B$ yields
     %
     \begin{equation*}
-        m \Bigl( \bigunion_{n \in \naturals} A_n \Bigr)
-            \leq \sum_{n=1}^\infty m(A_n).
+        \nu \Bigl( \bigunion_{n \in \naturals} A_n \Bigr)
+            \leq \sum_{n=1}^\infty \nu(A_n).
     \end{equation*}
     %
-    We prove the opposite inequality. If the left-hand side is infinite this is obvious, so assume that it is finite. For $\epsilon > 0$ there is then a sequence $(C_n)_{n \in \naturals}$ in $\calE$ with $C_n \subseteq A_n$ and $M(C_n) < \infty$ such that $m(A_n) \leq M(C_n) + \epsilon/2^n$. It follows that
+    We prove the opposite inequality. If the left-hand side is infinite this is obvious, so assume that it is finite. For $\epsilon > 0$ there is then a sequence $(C_n)_{n \in \naturals}$ in $\calE$ with $C_n \subseteq A_n$ and $\mu(C_n) < \infty$ such that $\nu(A_n) \leq \mu(C_n) + \epsilon/2^n$. By continuity of $\mu$ we have
     %
     \begin{equation*}
-        \sum_{n=1}^\infty m(A_n)
-            \leq \sum_{n=1}^\infty M(C_n) + \epsilon
-            \leq \sum_{n=1}^\infty m(A_n) + \epsilon,
+        \mu \Bigl( \bigunion_{n \in \naturals} C_n \Bigr)
+            = \lim_{k \to \infty} \mu \Bigl( \bigunion_{n \leq k} C_n \Bigr)
+            \leq \nu \Bigl( \bigunion_{n \in \naturals} A_n \Bigr)
+            < \infty,
     \end{equation*}
     %
-    and since $\epsilon$ was arbitrary, the inequality follows. [Something's missing here?]
+    since $\mu(C_n) \leq \nu(A_n)$. Notice that the $C_n$ are also pairwise disjoint, so it follows that
+    %
+    \begin{equation*}
+        \sum_{n=1}^\infty \nu(A_n) - \epsilon
+            \leq \sum_{n=1}^\infty \mu(C_n)
+            = \mu \Bigl( \bigunion_{n \in \naturals} C_n \Bigr)
+            \leq \nu \Bigl( \bigunion_{n \in \naturals} A_n \Bigr),
+    \end{equation*}
+    %
+    and since $\epsilon$ was arbitrary, the inequality follows.
 \end{proof}
 
 
@@ -241,7 +253,19 @@ A Borel measure $\mu$ on $X$ is called \emph{locally finite} if every point has 
     Conversely, suppose that $X$ is locally compact and that $\mu$ is a Borel measure on $X$ that is finite on compact sets. Then every point has a compact neighbourhood, so every point has a neighbourhood on which $\mu$ is finite. Hence $\mu$ is locally finite.
 \end{proof}
 
-Above we defined 
+
+
+\begin{definition}[Principal measures]
+    Let $\nu$ be a measure on a topological space $X$. The \emph{principal measure}\footnotemark{} associated with $\nu$ is the map $\mu \colon \borel{X} \to [0,\infty]$ given by
+    %
+    \begin{equation*}
+        \mu(A)
+            = \inf \set{\nu(U)}{\text{$U$ open and $A \subseteq U$}}.
+    \end{equation*}
+\end{definition}
+\footnotetext{I do not believe this is standard terminology. \textcite{bauer2001} uses the term \textquote{principal measure} for the $R_2$-Radon measure determined by a positive linear functional, as in Riesz' representation theorem.}
+
+[Is this a measure in general?]
 
 
 
@@ -249,55 +273,9 @@ Above we defined
 
 Let $X$ be a Hausdorff topological space.
 
-\begin{definition}[Radon measures, $R_1$]
-    A Radon measure on $X$ is a pair of measures $(M,m)$ on $\borel{X}$ such that
-    %
-    \begin{enumdef}
-        \item $m$ is the essential measure associated with $M$,
-
-        \item $M$ is locally finite and outer regular,
-
-        \item $m$ is inner regular, and
-
-        \item $m(B) = M(B)$ for $B \in \borel{X}$ if $B$ is open or $M(B) < \infty$.
-    \end{enumdef}
-\end{definition}
-
-\begin{definition}[Radon measures, $R_2$]
-    A Radon measure on $X$ is a measure $M$ on $\borel{X}$ that is locally finite, outer regular, and inner regular on open sets.
-\end{definition}
-
-\begin{definition}[Radon measures, $R_3$]
-    A Radon measure on $X$ is a measure $m$ on $\borel{X}$ that is locally finite and inner regular.
-\end{definition}
-
-
-\begin{theorem}
-    \begin{enumthm}
-        \item Let $(M,m)$ be an $R_1$-Radon measure on $X$. Then $M$ is an $R_2$-Radon measure, and $m$ is an $R_3$-Radon measure.
-
-        \item Let $M$ be an $R_2$-Radon measure on $X$. If $m$ is the essential measure associated with $M$, then $(M,m)$ is an $R_1$-Radon measure.
-
-        \item Let $m$ be an $R_3$-Radon measure on $X$, and define a map $M \colon \borel{X} \to [0,\infty]$ by
-        %
-        \begin{equation*}
-            M(A)
-                = \inf \set{m(U)}{\text{$U$ open and $A \subseteq U$}}.
-        \end{equation*}
-        %
-        Then $(M,m)$ is an $R_1$-Radon measure on $X$.
-    \end{enumthm}
-\end{theorem}
-
-\begin{proof}
-    
-\end{proof}
-
 \newcommand{\calM}{\mathcal{M}}
 \newcommand{\radonout}{\calM^{+}}
 \newcommand{\radonin}{\calM^{-}}
-
-Put this in different terms:
 
 \begin{definition}[Radon measures]
     An \emph{outer Radon measure} on $X$ is a Borel measure on $X$ that is locally finite, outer regular, and inner regular on open sets.
@@ -328,6 +306,24 @@ This is \textcite[Proposition~7.5]{folland2007}, though Folland only considers R
     Hence $\mu$ is inner regular on $A$.
 
     Now assume that $\mu(A) = \infty$ and that there exists an increasing sequence $(A_n)_{n \in \naturals}$ in $\borel{X}$ with $\mu(A_n) < \infty$, and whose union is $A$. It follows by continuity of $\mu$ that $\mu(A_n) \to \infty$ as $n \to \infty$, so for any $R > 0$ there is an $n \in \naturals$ such that $\mu(A_n) > R$. By inner regularity on $A_n$ there exists a compact set $K \subset A_n$ such that $\mu(K) > R$. Hence $\mu$ is also inner regular on $A$.
+\end{proof}
+
+\begin{lemma}
+    \label{thm:Radon-agree-on-open-sets}
+    Let $\mu$ be an $R_2$-Radon measure on $X$, and let $\nu$ be the essential measure associated with $\mu$. Then $\nu(U) = \mu(U)$ for all open $U \subseteq X$.
+\end{lemma}
+
+\begin{proof}
+    Let $U \subseteq X$ be open. Since $\nu \leq \mu$ in general, we only need to show that $\nu(U) \geq \mu(U)$. Since $\mu$ is inner regular on $U$, there exists a sequence $(K_n)_{n \in \naturals}$ of compact subsets of $U$ such that $\mu(U) = \lim_{n \to \infty} \mu(K_n)$. Furthermore, $\mu(K_n) < \infty$ because $\mu$ is locally finite, so since $\nu$ and $\mu$ agree when $\mu$ is finite it follows that
+    %
+    \begin{equation*}
+        \mu(U)
+            = \lim_{n \to \infty} \mu(K_n)
+            = \lim_{n \to \infty} \nu(K_n)
+            \leq \nu(U),
+    \end{equation*}
+    %
+    as desired.
 \end{proof}
 
 % Add to framedtheorems.sty
@@ -431,7 +427,7 @@ Now let $X$ be a locally compact Hausdorff space, and let $C_c(X)$ denote the sp
 \end{proof}
 
 \begin{proposition}
-    Let $(M,m)$ be an $R_1$-Radon measure on $X$, and let $I$ be a positive linear functional on $C_c(X)$. Then $M$ is a representing measure for $I$ if and only if $m$ is. [Uniqueness?]
+    Let $(M,m)$ be an $R_1$-Radon measure on $X$, and let $I$ be a positive linear functional on $C_c(X)$. Then $\mu$ is a representing measure for $I$ if and only if $\nu$ is. [Uniqueness?]
 \end{proposition}
 
 \begin{proof}
@@ -441,41 +437,13 @@ Now let $X$ be a locally compact Hausdorff space, and let $C_c(X)$ denote the sp
         \int f \dif m = \int f \dif M
     \end{equation*}
     %
-    for all $f \in C_c(X)$. Pick one such $f$, and let $K = \supp f$. Since $K$ is compact and both $m$ and $M$ are locally finite, \cref{thm:essential-measure-equivalent-formula} implies that $m$ and $M$ agree when restricted to $K$. The claim follows.
+    for all $f \in C_c(X)$. Pick one such $f$, and let $K = \supp f$. Since $K$ is compact and both $\nu$ and $\mu$ are locally finite, \cref{thm:essential-measure-equivalent-formula} implies that $\nu$ and $\mu$ agree when restricted to $K$. The claim follows.
 \end{proof}
 
 
 Don't know where to put this, but just to write it down:
 
-\begin{definition}[Principal measures]
-    Let $m$ be a measure on a topological space $X$. The \emph{principal measure}\footnotemark{} associated with $m$ is the map $M \colon \borel{X} \to [0,\infty]$ given by
-    %
-    \begin{equation*}
-        M(A)
-            = \inf \set{m(U)}{\text{$U$ open and $A \subseteq U$}}.
-    \end{equation*}
-\end{definition}
-\footnotetext{I do not believe this is standard terminology. \textcite{bauer2001} uses the term \textquote{principal measure} for the $R_2$-Radon measure determined by a positive linear functional, as in Riesz' representation theorem.}
 
-[Is this a measure in general?]
-
-\begin{lemma}
-    \label{thm:Radon-agree-on-open-sets}
-    Let $M$ be an $R_2$-Radon measure on $X$, and let $m$ be the essential measure associated with $M$. Then $m(U) = M(U)$ for all open $U \subseteq X$.
-\end{lemma}
-
-\begin{proof}
-    Let $U \subseteq X$ be open. Since $m \leq M$ in general, we only need to show that $m(U) \geq M(U)$. Since $M$ is inner regular on $U$, there exists a sequence $(K_n)_{n \in \naturals}$ of compact subsets of $U$ such that $M(U) = \lim_{n \to \infty} M(K_n)$. Furthermore, $M(K_n) < \infty$ because $M$ is locally finite, so since $m$ and $M$ agree when $M$ is finite it follows that
-    %
-    \begin{equation*}
-        M(U)
-            = \lim_{n \to \infty} M(K_n)
-            = \lim_{n \to \infty} m(K_n)
-            \leq m(U),
-    \end{equation*}
-    %
-    as desired.
-\end{proof}
 
 \begin{proposition}
     Let $M$ be an $R_2$-Radon measure on $X$, let $m$ be the essential measure associated with $M$, and let $M'$ be the principal measure associated with $m$. Then $M = M'$. In particular, every $R_2$-Radon measure is the principal measure of some $R_3$-Radon measure.
@@ -485,22 +453,22 @@ Don't know where to put this, but just to write it down:
     Let $A \in \borel{X}$. Since $M$ is outer regular,
     %
     \begin{equation*}
-        M(A)
-            = \inf \set{M(U)}{\text{$U$ open and $A \subseteq U$}}.
+        \mu(A)
+            = \inf \set{\mu(U)}{\text{$U$ open and $A \subseteq U$}}.
     \end{equation*}
     %
-    Comparing this with the definition of $M'$ and recalling that $m \leq M$, we find that $M'(A) \leq M(A)$.
+    Comparing this with the definition of $M'$ and recalling that $m \leq M$, we find that $M'(A) \leq \mu(A)$.
 
-    For the opposite inequality, let $\epsilon > 0$ and let $U \supseteq A$ be an open set such that $m(U) \leq M'(A) + \epsilon$. Because $m(U) = M(U)$ by [lemma], we have
+    For the opposite inequality, let $\epsilon > 0$ and let $U \supseteq A$ be an open set such that $\nu(U) \leq M'(A) + \epsilon$. Because $\nu(U) = \mu(U)$ by [lemma], we have
     %
     \begin{equation*}
         M'(A) + \epsilon
-            \geq m(U)
-            = M(U)
-            \geq M(A),
+            \geq \nu(U)
+            = \mu(U)
+            \geq \mu(A),
     \end{equation*}
     %
-    so it follows that $M'(A) \geq M(A)$ since $\epsilon$ was arbitrary.
+    so it follows that $M'(A) \geq \mu(A)$ since $\epsilon$ was arbitrary.
 \end{proof}
 
 
