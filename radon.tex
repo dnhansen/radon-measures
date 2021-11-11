@@ -275,6 +275,7 @@ A Borel measure $\mu$ on $X$ is called \emph{locally finite} if every point has 
 \section{Borel measures on Polish spaces}
 
 \begin{lemma}
+    \label{thm:metrisable-almost-regular}
     Let $\mu$ be a finite Borel measure on a metrisable space $X$. Then $\mu$ is outer regular, and for all $A \in \borel{X}$ we have
     %
     \begin{equation}
@@ -309,11 +310,12 @@ The proof yields more than the theorem, namely that any outer regular Borel meas
 
 
 \begin{lemma}
+    \label{thm:Polish-regular}
     Every finite Borel measure $\mu$ on a Polish space $X$ is regular.
 \end{lemma}
 
 \begin{proof}
-    It suffices to prove for every $\epsilon > 0$ the existence of a compact set $K \subseteq X$ such that $\mu(X \setminus K) \leq \epsilon$ (i.e. that $\mu$ is \emph{tight}). If $A \in \borel{X}$, then [ref] there is a closed set $F \subseteq A$ such that $\mu(A \setminus F) \leq \epsilon$. But then
+    It suffices to prove for every $\epsilon > 0$ the existence of a compact set $K \subseteq X$ such that $\mu(X \setminus K) \leq \epsilon$ (i.e. that $\mu$ is \emph{tight}). If $A \in \borel{X}$, then by \cref{thm:metrisable-almost-regular} there is a closed set $F \subseteq A$ such that $\mu(A \setminus F) \leq \epsilon$. But then
     %
     \begin{equation*}
         A \setminus (K \intersect F)
@@ -349,6 +351,62 @@ The proof yields more than the theorem, namely that any outer regular Borel meas
     %
     This proves the claim.
 \end{proof}
+
+
+\begin{theorem}
+    Every locally finite Borel measure $\mu$ on a Polish space $X$ is $\sigma$-finite and regular.
+\end{theorem}
+
+% Add to framedtheorems.sty
+\newcommand{\mylistlabelfont}[1]{{\normalfont\color{linkcolor}\textit{#1}:}}
+\newlist{proofsec}{description}{1}
+\setlist[proofsec]{leftmargin=0pt, parsep=0pt, listparindent=\parindent, font=\mylistlabelfont}
+
+\begin{proof}
+\begin{proofsec}
+    \item[$\sigma$-finiteness]
+    Every point $x \in X$ has an open neighbourhood $U_x$ of finite $\mu$-measure. Since $X$ is Lindelöf, countably many of the neighbourhoods cover $X$, say $(U_{x_n})_{n \in \naturals}$. Let $V_n = \bigunion_{k \leq n} U_{x_k}$. Then $V_n \uparrow X$, and $\mu(V_n) < \infty$.
+
+    \item[Inner regularity]
+    For $n \in \naturals$ define a finite measure $\mu_n$ on $X$ by $\mu_n(A) = \mu(A \intersect V_n)$. Let $A \in \borel{X}$ and $\epsilon > 0$. Then there is an $n \in \naturals$ such that $\mu(A) \leq \mu_n(A) + \epsilon$. By \cref{thm:Polish-regular} $\mu_n$ is (inner) regular, so there is a compact set $K \subseteq A$ such that $\mu_n(A) \leq \mu_n(K) + \epsilon$. In total,
+    %
+    \begin{equation*}
+        \mu(A)
+            \leq \mu_n(K) + 2\epsilon
+            \leq \mu(K) + 2\epsilon,
+    \end{equation*}
+    %
+    so $\mu$ is inner regular on $A$ since $\epsilon$ was arbitrary.
+
+    \item[Outer regularity]
+    Let $A \in \borel{X}$, and let $\epsilon > 0$. For $n \in \naturals$ there exists an open set $U_n \supseteq A$ such that $\mu_n(U_n \setminus A) \leq \epsilon/2^n$ by \cref{thm:Polish-regular}. If we let $U = \bigunion_{n\in\naturals} U_n \intersect V_n$, then
+    %
+    \begin{equation*}
+        A
+            = A \intersect \bigunion_{n\in\naturals} V_n
+            = \bigunion_{n\in\naturals} A \intersect V_n
+            \subseteq U,
+    \end{equation*}
+    %
+    since $A \subseteq U_n$. Furthermore,
+    %
+    \begin{equation*}
+        U \setminus A
+            = \bigunion_{n\in\naturals} (U_n \setminus A) \intersect V_n,
+    \end{equation*}
+    %
+    which implies that
+    %
+    \begin{equation*}
+        \mu(U \setminus A)
+            \leq \sum_{n=1}^\infty \mu_n(U_n \setminus A)
+            \leq \epsilon,
+    \end{equation*}
+    %
+    so $\mu$ is outer regular on $A$.
+\end{proofsec}
+\end{proof}
+
 
 
 \chapter{Radon measures}
@@ -413,10 +471,6 @@ This is Proposition~7.5 in \textcite{folland2007}, though Folland only considers
     as desired.
 \end{proof}
 
-% Add to framedtheorems.sty
-\newcommand{\mylistlabelfont}[1]{{\normalfont\color{linkcolor}\textit{#1}:}}
-\newlist{proofsec}{description}{1}
-\setlist[proofsec]{leftmargin=0pt, parsep=0pt, listparindent=\parindent, font=\mylistlabelfont}
 
 We denote the set of outer Radon measures on $X$ by $\radonout(X)$ and the set of inner Radon measures by $\radonin(X)$. Define maps $E \colon \radonout(X) \to \radonin(X)$ and $P \colon \radonin(X) \to \radonout(X)$, where $E$ maps an outer Radon measure to the corresponding essential measure, and $P$ maps an inner Radon measure to the corresponding principal measure.
 
