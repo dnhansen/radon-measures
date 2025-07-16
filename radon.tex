@@ -17,13 +17,14 @@
 \usepackage{latex-sty/articlesectionstyle}
 
 % Fonts
+% \usepackage{amssymb}
 \usepackage[largesmallcaps,partialup]{kpfonts}
 \DeclareSymbolFontAlphabet{\mathrm}{operators} % https://tex.stackexchange.com/questions/40874/kpfonts-siunitx-and-math-alphabets
 \linespread{1.06}
-\let\mathfrak\undefined
-\usepackage{eufrak}
+% \let\mathfrak\undefined
+\DeclareMathAlphabet\mathfrak{U}{euf}{m}{n}
+\SetMathAlphabet\mathfrak{bold}{U}{euf}{b}{n}
 \usepackage{inconsolata}
-\usepackage{amssymb}
 
 % Hyperlinks
 \usepackage{hyperref}
@@ -100,7 +101,192 @@
 We assume that the reader is familiar with abstract measure spaces and topological spaces. Below we fix terminology and prove some elementary results.
 
 
-\section{Essential and principal measures}
+\begin{proposition}
+    \label{prop:semifinite-part}
+    Let $(X,\calE,\mu)$ be a measure space, and define $\mu_0 \colon \calE \to [0,\infty]$ by
+    %
+    \begin{equation*}
+        \mu_0(A)
+            = \sup \set{\mu(B)}{B \in \calE, B \subseteq A, \mu(B) < \infty}.
+    \end{equation*}
+    %
+    Then $\mu_0$ is a semifinite measure on $(X,\calE)$ called the \emph{semifinite part} of $\mu$. Also, $\mu_0 \leq \mu$, and for $A \in \calE$ with $\mu(A) < \infty$ we have $\mu_0(A) = \mu(A)$. If $\mu$ is already semifinite, then $\mu_0 = \mu$.
+
+    Furthermore, there is a measure $\nu$ on $(X,\calE)$ only assuming the values $0$ and $\infty$, such that $\mu = \mu_0 + \nu$.
+\end{proposition}
+
+\begin{proof}
+    Clearly $\mu_0 \leq \mu$ with equality for $\mu$-finite sets. Let $(A_n)_{n \in \naturals}$ be a sequence of pairwise disjoint sets in $\calE$, and let $B \subseteq \bigunion_{n \in \naturals} A_n$ be such that $\mu(B) < \infty$. If we let $B_n = B \intersect A_n$, then
+    %
+    \begin{equation*}
+        \mu(B)
+            = \mu \Bigl( \bigunion_{n \in \naturals} B_n \Bigr)
+            = \sum_{n=1}^\infty \mu(B_n)
+            \leq \sum_{n=1}^\infty \mu_0(A_n),
+    \end{equation*}
+    %
+    where the inequality follows since $B_n \subseteq A_n$ and $\mu(B_n) < \infty$. This inequality holds for all $B \subseteq \bigunion_{n \in \naturals} A_n$, so taking the supremum over such $B$ yields
+    %
+    \begin{equation*}
+        \mu_0 \Bigl( \bigunion_{n \in \naturals} A_n \Bigr)
+            \leq \sum_{n=1}^\infty \mu_0(A_n).
+    \end{equation*}
+    %
+    We prove the opposite inequality. If the left-hand side is infinite this is obvious, so assume that it is finite. For $\epsilon > 0$ there is then a sequence $(C_n)_{n \in \naturals}$ in $\calE$ with $C_n \subseteq A_n$ and $\mu(C_n) < \infty$ such that $\mu_0(A_n) \leq \mu(C_n) + \epsilon/2^n$. By continuity of $\mu$ we have
+    %
+    \begin{equation*}
+        \mu \Bigl( \bigunion_{n \in \naturals} C_n \Bigr)
+            = \lim_{k \to \infty} \mu \Bigl( \bigunion_{n \leq k} C_n \Bigr)
+            \leq \mu_0 \Bigl( \bigunion_{n \in \naturals} A_n \Bigr)
+            < \infty,
+    \end{equation*}
+    %
+    since $\mu(C_n) \leq \mu_0(A_n)$. Notice that the $C_n$ are also pairwise disjoint, so it follows that
+    %
+    \begin{equation*}
+        \sum_{n=1}^\infty \mu_0(A_n) - \epsilon
+            \leq \sum_{n=1}^\infty \mu(C_n)
+            = \mu \Bigl( \bigunion_{n \in \naturals} C_n \Bigr)
+            \leq \mu_0 \Bigl( \bigunion_{n \in \naturals} A_n \Bigr),
+    \end{equation*}
+    %
+    and since $\epsilon$ was arbitrary, the inequality follows.
+
+    Next, it is obvious that $\mu_0$ is semifinite, since if $\mu_0(A) = \infty$ then by definition there is a set $B \subseteq A$ with $0 < \mu(B) < \infty$. But then also $0 < \mu_0(B) < \infty$.
+
+    Now assume that $\mu$ is already semifinite, and consider $A \in \calE$ with $\mu(A) = \infty$. Then for any $R > 0$ there is a subset $B \subseteq A$ with $R < \mu(B) < \infty$. It follows that $\mu_0(A) = \infty$, so $\mu_0 = \mu$.
+
+    TODO final claim.
+\end{proof}
+
+Different non-semifinite measures can have the same semifinite part, so the map $\mu \mapsto \mu_0$ is not generally invertible.
+
+
+\begin{lemma}
+    \label{lem:semifinite-agree-with-original-measure}
+    Let $(X,\calE,\mu)$ be a measure space. For any $A \in \calE$ there is a $B \in \calE$ with $B \subseteq A$ such that $\mu_0(A) = \mu(B)$.
+\end{lemma}
+
+\begin{proof}
+    This is obvious if $\mu_0(A) = \infty$, so assume that $\mu_0(A) < \infty$. By definition of $\mu_0$ there is a sequence $(B_n)$ of measurable subsets of $A$ such that $\mu(B_n) \leq \mu_0(A) \leq \mu(B_n) + \tfrac{1}{n}$ and $\mu(B_n) < \infty$. Letting $C_n = B_1 \union \cdots \union B_n$ we also have $\mu(C_n) < \infty$, and since $C_n$ is also a subset of $A$ we have $\mu(C_n) \leq \mu_0(A) \leq \mu(C_n) + \tfrac{1}{n}$. The claim follows by letting $B = \bigunion_{n \in \naturals} C_n$.
+\end{proof}
+
+
+
+
+
+
+% \section{Essential and principal measures}
+
+% \newcommand{\calJ}{\mathcal{J}}
+% \newcommand{\powerset}[1]{2^{#1}}
+
+% If $\calJ \subseteq \powerset{X}$ and $\mu \colon \calJ \to [0,\infty]$ such that $\emptyset \in \calJ$ and $\mu(\emptyset) = 0$, then $\mu$ gives rise to an outer measure $\mu^*$ on $X$ by
+% %
+% \begin{equation*}
+%     \mu^*(A)
+%         = \inf \set[\Big]{
+%             \sum_{n=1}^\infty \mu(B_n)
+%         }{
+%             (B_n)_{n \in \naturals} \subseteq \calJ
+%             \text{ and }
+%             A \subseteq \bigunion_{n \in \naturals} B_n
+%         }.
+% \end{equation*}
+% %
+% In the case that $\mu$ is a measure and $\calJ$ is a $\sigma$-algebra, we may rephrase this as
+% %
+% \begin{equation*}
+%     \mu^*(A)
+%         = \inf \set{
+%             \mu(B)
+%         }{
+%             B \in \calJ
+%             \text{ and }
+%             A \subseteq B
+%         }.
+% \end{equation*}
+% %
+% In this case we also have $\mu^*(A) = \mu(A)$ if $A \in \calJ$.
+
+% \begin{definition}[Essential measures]
+%     Let $(X, \calE, \mu)$ be a measure space. The \emph{essential measure} associated with $\mu$ is the map $\nu \colon \borel{X} \to [0,\infty]$ given by
+%     %
+%     \begin{equation}
+%         \label{eq:essential-measure-definition}
+%         \nu(A)
+%             = \sup \set{ \mu^*(B) }{ B \subseteq A \text{ and } \mu^*(B) < \infty },
+%     \end{equation}
+%     %
+%     for all $A \in \calE$.
+% \end{definition}
+
+
+% \begin{lemma}
+%     \label{thm:essential-measure-equivalent-formula}
+%     If $(X,\calE,\mu)$ is a measure space and $\nu$ is the essential measure associated with $\mu$, then $\nu(A) = \mu(A)$ when $\mu(A) < \infty$ or $\nu(A) = \infty$, and
+%     %
+%     \begin{equation}
+%         \label{eq:essential-measure-equivalent-formula}
+%         \nu(A)
+%             = \sup \set{ \mu(B) }{ B \in \calE, B \subseteq A \text{ and } \mu(B) < \infty },
+%     \end{equation}
+%     %
+%     for all $A \in \calE$. Furthermore, $\nu$ is a measure on $\calE$.
+% \end{lemma}
+% %
+% Given this lemma, I have no idea why one would define essential measures by \eqref{eq:essential-measure-definition}, but this is the way it is done in \textcite{schwartz1973} and \textcite{nlab:radon_measure}.
+
+% \begin{proof}
+%     Let $A \in \calE$, and assume that $\mu(A) < \infty$. Then $\mu^*(A) = \mu(A) < \infty$ by the definition of the outer measure $\mu^*$, so $\nu(A) = \mu^*(A)$ by the definition of $\nu$. With this, \eqref{eq:essential-measure-equivalent-formula} is obvious when $\mu(A) < \infty$.
+
+%     Now assume that $\nu(A) = \infty$. Then for any $R > 0$ there exists a $B \subseteq A$ such that $\mu^*(B) \geq R$. Now let $C \in \calE$ such that $B \subseteq C$ and $\mu(C) < \infty$. Then $B \subseteq A \intersect C \subseteq A$, so
+%     %
+%     \begin{equation*}
+%         R
+%             \leq \mu^*(B)
+%             \leq \mu(A \intersect C)
+%             < \infty.
+%     \end{equation*}
+%     %
+%     Since $R$ was arbitrary, $\mu$ can take on arbitrarily large but finite values on subsets of $A$, so \eqref{eq:essential-measure-equivalent-formula} follows. It also follows that $\mu(A) = \infty$.
+
+%     Finally we show that $\nu$ is a Borel measure on $X$. Let $(A_n)_{n \in \naturals}$ be a sequence of pairwise disjoint sets in $\calE$, and let $B \subseteq \bigunion_{n \in \naturals} A_n$ be such that $\mu(B) < \infty$. If we let $B_n = B \intersect A_n$, then
+%     %
+%     \begin{equation*}
+%         \mu(B)
+%             = \mu \Bigl( \bigunion_{n \in \naturals} B_n \Bigr)
+%             = \sum_{n=1}^\infty \mu(B_n)
+%             \leq \sum_{n=1}^\infty \nu(A_n),
+%     \end{equation*}
+%     %
+%     where the inequality follows since $B_n \subseteq A_n$ and $\mu(B_n) < \infty$. This inequality holds for all $B \subseteq \bigunion_{n \in \naturals} A_n$, so taking the supremum over such $B$ yields
+%     %
+%     \begin{equation*}
+%         \nu \Bigl( \bigunion_{n \in \naturals} A_n \Bigr)
+%             \leq \sum_{n=1}^\infty \nu(A_n).
+%     \end{equation*}
+%     %
+%     We prove the opposite inequality. If the left-hand side is infinite this is obvious, so assume that it is finite. For $\epsilon > 0$ there is then a sequence $(C_n)_{n \in \naturals}$ in $\calE$ with $C_n \subseteq A_n$ and $\mu(C_n) < \infty$ such that $\nu(A_n) \leq \mu(C_n) + \epsilon/2^n$. By continuity of $\mu$ we have
+%     %
+%     \begin{equation*}
+%         \mu \Bigl( \bigunion_{n \in \naturals} C_n \Bigr)
+%             = \lim_{k \to \infty} \mu \Bigl( \bigunion_{n \leq k} C_n \Bigr)
+%             \leq \nu \Bigl( \bigunion_{n \in \naturals} A_n \Bigr)
+%             < \infty,
+%     \end{equation*}
+%     %
+%     since $\mu(C_n) \leq \nu(A_n)$. Notice that the $C_n$ are also pairwise disjoint, so it follows that
+%     %
+%     \begin{equation*}
+%         \sum_{n=1}^\infty \nu(A_n) - \epsilon
+%             \leq \sum_{n=1}^\infty \mu(C_n)
+%             = \mu \Bigl( \bigunion_{n \in \naturals} C_n \Bigr)
+%             \leq \nu \Bigl( \bigunion_{n \in \naturals} A_n \Bigr),
+%     \end{equation*}
+%     %
+%     and since $\epsilon$ was arbitrary, the inequality follows.
+% \end{proof}
 
 \newcommand{\calJ}{\mathcal{J}}
 \newcommand{\powerset}[1]{2^{#1}}
@@ -118,7 +304,7 @@ If $\calJ \subseteq \powerset{X}$ and $\mu \colon \calJ \to [0,\infty]$ such tha
         }.
 \end{equation*}
 %
-In the case that $\mu$ is a measure and $\calJ$ is a $\sigma$-algebra, we may rephrase this as
+Assuming that $\calJ$ is closed under countable unions (e.g., $\calJ$ is a topology or a $\sigma$-algebra) and that $\mu$ is countably sub-additive, we may rephrase this as
 %
 \begin{equation*}
     \mu^*(A)
@@ -131,130 +317,188 @@ In the case that $\mu$ is a measure and $\calJ$ is a $\sigma$-algebra, we may re
         }.
 \end{equation*}
 %
-In this case we also have $\mu^*(A) = \mu(A)$ if $A \in \calJ$.
+If $\mu$ is also increasing, then we also have $\mu^*(A) = \mu(A)$ for all $A \in \calJ$. Finally we write $\mu^+ = \mu^*|_\calJ$. If $\calJ$ is a $\sigma$-algebra (and especially if $\mu$ is a measure) we may thus consider whether $\mu^+$ is (also) a measure.
 
-\begin{definition}[Essential measures]
-    Let $(X, \calE, \mu)$ be a measure space. The \emph{essential measure} associated with $\mu$ is the map $\nu \colon \borel{X} \to [0,\infty]$ given by
-    %
-    \begin{equation}
-        \label{eq:essential-measure-definition}
-        \nu(A)
-            = \sup \set{ \mu^*(B) }{ B \subseteq A \text{ and } \mu^*(B) < \infty },
-    \end{equation}
-    %
-    for all $A \in \calE$.
-\end{definition}
+
+
+
+% We take the first step towards constructing an \textquote{inverse} to taking the essential measure. I am not sure that this is possible in general, and we shall only be interested in this issue in the context of Radon measures. However, we give the definition of this \textquote{inverse} operation since it does not require any further developments.
+
+% If $X$ is a topological space, we denote the Borel algebra on $X$ by $\borel{X}$. A \emph{Borel measure} on $X$ is then a measure on $\borel{X}$.
+
+% \begin{definition}[Principal measures]
+%     Let $\nu$ be a Borel measure on a topological space $X$. The \emph{principal measure}\footnotemark{} associated with $\nu$ is the map $\mu \colon \borel{X} \to [0,\infty]$ given by
+%     %
+%     \begin{equation*}
+%         \mu(A)
+%             = \inf \set{\nu(U)}{\text{$U$ open and $A \subseteq U$}},
+%     \end{equation*}
+%     %
+%     for all $A \in \borel{X}$.
+% \end{definition}
+% \footnotetext{I do not believe this is standard terminology. \textcite{bauer2001} uses the term \textquote{principal measure} for a certain measure determined by a positive linear functional, as given by the Riesz representation theorem. This measure is what we will call an \emph{outer Radon measure} in \cref{def:Radon-measures}.}
+% %
+% Whether this is actually a measure in general I don't know, but it does not seem to be. In \cref{thm:Radon-pair-inverses} we shall prove that this is in fact the case when $\mu$ is what we will term an outer Radon measure. The proof seems to make essential use of this fact, so it seems unlikely that the principal measure associated with an arbitrary Borel measure is in fact a measure. Perhaps it is possible to define a different kind of map, replacing the assumption that $U$ is open with $U$ simply being measurable, perhaps with respect to a $\sigma$-algebra different from the Borel algebra. We will not pursue this further.
+
+
+\section{Borel measures}
+
+Below we let $X$ denote a Hausdorff topological space with Borel algebra $\borel{X}$. A measure on $(X,\borel{X})$ is called a \emph{Borel measure} on $X$. A Borel measure $\mu$ on $X$ is \emph{outer regular} on a set $A \in \borel{X}$ if
+%
+\begin{equation*}
+    \mu(A)
+        = \inf \set{\mu(U)}{U \supseteq A, \text{$U$ open}},
+\end{equation*}
+%
+and \emph{(strongly) inner regular} on $A$ if
+%
+\begin{equation*}
+    \mu(A)
+        = \sup \set{\mu(K)}{K \subseteq A, \text{$K$ compact}}.
+\end{equation*}
+%
+We also say that $\mu$ is \emph{weakly inner regular} on $A$ if
+%
+\begin{equation*}
+    \mu(A)
+        = \sup \set{\mu(F)}{F \subseteq A, \text{$F$ closed}}.
+\end{equation*}
+%
+Strong inner regularity of course implies weak inner regularity. If $\mu$ is outer (resp. inner, weakly inner) regular on all Borel sets, then we call it outer (resp. inner, weakly inner) regular. Furthermore, if $\mu$ is both outer and inner regular, then it is simply called \emph{regular}.
+
+\begin{lemma}
+    \label{lem:basic-regularity-that-always-holds}
+    Let $\mu$ be a Borel measure. Then $\mu$ is inner regular on all $\sigma$-compact sets, and weakly inner regular on all $F_\sigma$-sets. If $\mu$ is finite, then it is outer regular on all $G_\delta$-sets.
+\end{lemma}
+
+
+
 
 
 \begin{lemma}
-    \label{thm:essential-measure-equivalent-formula}
-    If $(X,\calE,\mu)$ is a measure space and $\nu$ is the essential measure associated with $\mu$, then $\nu(A) = \mu(A)$ when $\mu(A) < \infty$ or $\nu(A) = \infty$, and
-    %
-    \begin{equation}
-        \label{eq:essential-measure-equivalent-formula}
-        \nu(A)
-            = \sup \set{ \mu(B) }{ B \in \calE, B \subseteq A \text{ and } \mu(B) < \infty },
-    \end{equation}
-    %
-    for all $A \in \calE$. Furthermore, $\nu$ is a measure on $\calE$.
+    \label{lem:regular-on-finites-implies-sigma-finites}
+    If $\mu$ is outer (resp. inner, weakly inner) regular on all its finite sets, then it is outer (resp. inner, weakly inner) regular on all its $\sigma$-finite sets.
+    
+    If $A$ is $\sigma$-finite and $\mu$ is outer regular on $A$, then given $\epsilon > 0$ there is an open $U \supseteq A$ such that $\mu(U \setminus A) < \epsilon$.
 \end{lemma}
-%
-Given this lemma, I have no idea why one would define essential measures by \eqref{eq:essential-measure-definition}, but this is the way it is done in \textcite{schwartz1973} and \textcite{nlab:radon_measure}.
 
 \begin{proof}
-    Let $A \in \calE$, and assume that $\mu(A) < \infty$. Then $\mu^*(A) = \mu(A) < \infty$ by the definition of the outer measure $\mu^*$, so $\nu(A) = \mu^*(A)$ by the definition of $\nu$. With this, \eqref{eq:essential-measure-equivalent-formula} is obvious when $\mu(A) < \infty$.
+    First assume that $\mu$ is outer regular, let $A$ be $\sigma$-finite, and let $\epsilon > 0$. Then there are sets $A_n$ with finite measure such that $A = \bigunion_{n \in \naturals} A_n$, as well as open sets $U_n \supseteq A_n$ such that $\mu(U_n \setminus A_n) < \epsilon/2^n$. Letting $U = \bigunion_{n \in \naturals} U_n$ we have
+    %
+    \begin{equation*}
+        \mu(U \setminus A)
+            \leq \mu \Bigl( \bigunion_{n \in \naturals} (U_n \setminus A_n) \Bigr)
+            \leq \sum_{n=1}^\infty \mu(U_n \setminus A_n)
+            \leq \epsilon,
+    \end{equation*}
+    %
+    as desired.
 
-    Now assume that $\nu(A) = \infty$. Then for any $R > 0$ there exists a $B \subseteq A$ such that $\mu^*(B) \geq R$. Now let $C \in \calE$ such that $B \subseteq C$ and $\mu(C) < \infty$. Then $B \subseteq A \intersect C \subseteq A$, so
-    %
-    \begin{equation*}
-        R
-            \leq \mu^*(B)
-            \leq \mu(A \intersect C)
-            < \infty.
-    \end{equation*}
-    %
-    Since $R$ was arbitrary, $\mu$ can take on arbitrarily large but finite values on subsets of $A$, so \eqref{eq:essential-measure-equivalent-formula} follows. It also follows that $\mu(A) = \infty$.
-
-    Finally we show that $\nu$ is a Borel measure on $X$. Let $(A_n)_{n \in \naturals}$ be a sequence of pairwise disjoint sets in $\calE$, and let $B \subseteq \bigunion_{n \in \naturals} A_n$ be such that $\mu(B) < \infty$. If we let $B_n = B \intersect A_n$, then
-    %
-    \begin{equation*}
-        \mu(B)
-            = \mu \Bigl( \bigunion_{n \in \naturals} B_n \Bigr)
-            = \sum_{n=1}^\infty \mu(B_n)
-            \leq \sum_{n=1}^\infty \nu(A_n),
-    \end{equation*}
-    %
-    where the inequality follows since $B_n \subseteq A_n$ and $\mu(B_n) < \infty$. This inequality holds for all $B \subseteq \bigunion_{n \in \naturals} A_n$, so taking the supremum over such $B$ yields
-    %
-    \begin{equation*}
-        \nu \Bigl( \bigunion_{n \in \naturals} A_n \Bigr)
-            \leq \sum_{n=1}^\infty \nu(A_n).
-    \end{equation*}
-    %
-    We prove the opposite inequality. If the left-hand side is infinite this is obvious, so assume that it is finite. For $\epsilon > 0$ there is then a sequence $(C_n)_{n \in \naturals}$ in $\calE$ with $C_n \subseteq A_n$ and $\mu(C_n) < \infty$ such that $\nu(A_n) \leq \mu(C_n) + \epsilon/2^n$. By continuity of $\mu$ we have
-    %
-    \begin{equation*}
-        \mu \Bigl( \bigunion_{n \in \naturals} C_n \Bigr)
-            = \lim_{k \to \infty} \mu \Bigl( \bigunion_{n \leq k} C_n \Bigr)
-            \leq \nu \Bigl( \bigunion_{n \in \naturals} A_n \Bigr)
-            < \infty,
-    \end{equation*}
-    %
-    since $\mu(C_n) \leq \nu(A_n)$. Notice that the $C_n$ are also pairwise disjoint, so it follows that
-    %
-    \begin{equation*}
-        \sum_{n=1}^\infty \nu(A_n) - \epsilon
-            \leq \sum_{n=1}^\infty \mu(C_n)
-            = \mu \Bigl( \bigunion_{n \in \naturals} C_n \Bigr)
-            \leq \nu \Bigl( \bigunion_{n \in \naturals} A_n \Bigr),
-    \end{equation*}
-    %
-    and since $\epsilon$ was arbitrary, the inequality follows.
+    Instead assume that $\mu$ is inner (resp. weakly inner) regular. We may assume that $\mu(A) = \infty$ so that $\mu(A_n) \to \infty$. The claim then follows since this yields an unbounded sequence of compact (resp. closed) subsets of the $A_n$.
 \end{proof}
 
-We take the first step towards constructing an \textquote{inverse} to taking the essential measure. I am not sure that this is possible in general, and we shall only be interested in this issue in the context of Radon measures. However, we give the definition of this \textquote{inverse} operation since it does not require any further developments.
 
-If $X$ is a topological space, we denote the Borel algebra on $X$ by $\borel{X}$. A \emph{Borel measure} on $X$ is then a measure on $\borel{X}$.
+\begin{lemma}
+    \label{lem:outer-regular-iff-weakly-inner-regular}
+    A $\sigma$-finite Borel measure is outer regular if and only if it is weakly inner regular. In this case, for each $A \in \borel{X}$ and $\epsilon > 0$ there is an open set $U$ and a closed set $F$ such that $F \subseteq A \subseteq U$ and $\mu(U \setminus F) < \epsilon$.
+\end{lemma}
 
-\begin{definition}[Principal measures]
-    Let $\nu$ be a Borel measure on a topological space $X$. The \emph{principal measure}\footnotemark{} associated with $\nu$ is the map $\mu \colon \borel{X} \to [0,\infty]$ given by
+\begin{proof}
+    Let $\mu$ be outer regular and consider $A \in \borel{X}$. Since $A$ and $A^c$ are $\sigma$-finite, \cref{lem:regular-on-finites-implies-sigma-finites} yields open sets set $U \supseteq A$ and $V \supseteq A^c$ such that $\mu(U \setminus A) < \tfrac{\epsilon}{2}$ and $\mu(V \setminus A^c) < \tfrac{\epsilon}{2}$. Letting $F = V^c$ this implies that
     %
     \begin{equation*}
-        \mu(A)
-            = \inf \set{\nu(U)}{\text{$U$ open and $A \subseteq U$}},
+        \mu(U \setminus F)
+            = \mu(U \setminus A) + \mu(A \setminus F)
+            = \mu(U \setminus A) + \mu(V \setminus A^c)
+            < \epsilon.
     \end{equation*}
     %
-    for all $A \in \borel{X}$.
-\end{definition}
-\footnotetext{I do not believe this is standard terminology. \textcite{bauer2001} uses the term \textquote{principal measure} for a certain measure determined by a positive linear functional, as given by the Riesz representation theorem. This measure is what we will call an \emph{outer Radon measure} in \cref{def:Radon-measures}.}
-%
-Whether this is actually a measure in general I don't know, but it does not seem to be. In \cref{thm:Radon-pair-inverses} we shall prove that this is in fact the case when $\mu$ is what we will term an outer Radon measure. The proof seems to make essential use of this fact, so it seems unlikely that the principal measure associated with an arbitrary Borel measure is in fact a measure. Perhaps it is possible to define a different kind of map, replacing the assumption that $U$ is open with $U$ simply being measurable, perhaps with respect to a $\sigma$-algebra different from the Borel algebra. We will not pursue this further.
+    This also implies that $\mu(A \setminus F) < \epsilon$, showing that $\mu$ is weakly inner regular. The converse is similar.
+\end{proof}
 
 
-\section{Borel measures on Hausdorff spaces}
+\begin{lemma}
+    \label{lem:G-delta-regularity}
+    Let $\mu$ be a finite Borel measure on a $G_\delta$-space $X$. Then $\mu$ is outer regular and weakly inner regular.
+\end{lemma}
 
-Below we let $X$ denote a Hausdorff topological space. A Borel measure $\mu$ on $X$ is called \emph{outer regular} on a set $B \in \borel{X}$ if
-%
-\begin{equation*}
-    \mu(B)
-        = \inf \set{\mu(U)}{U \supseteq B, \text{$U$ open}},
-\end{equation*}
-%
-and \emph{inner regular} on $B$ if
-%
-\begin{equation*}
-    \mu(B)
-        = \sup \set{\mu(K)}{K \subseteq B, \text{$K$ compact}}.
-\end{equation*}
-%
-If $\mu$ is outer (inner) regular on all Borel sets, then we call it \emph{outer (inner) regular}. Furthermore, if $\mu$ is both outer and inner regular, then it is simply called \emph{regular}.
+\newcommand{\calA}{\mathcal{A}}
 
-A Borel measure $\mu$ on $X$ is called \emph{locally finite} if every point has a neighbourhood $U$ with $\mu(U) < \infty$. We have the following characterisation of local finiteness:
+\begin{proof}
+    Let $\calA$ be the subcollection of $\borel{X}$ consisting of sets on which $\mu$ is both outer regular and weakly inner regular. Since $\mu$ is finite, a Borel set $A$ lies in $\calA$ if and only if given $\epsilon > 0$ there is an open set $U$ and a closed set $F$ such that $F \subseteq A \subseteq U$ and $\mu(U \setminus F) < \epsilon$. Clearly $\calA$ is thus closed under complementation.
+    
+    Since every open set is an $F_\sigma$-set, \cref{lem:basic-regularity-that-always-holds} implies that $\mu$ is weakly inner regular on all open sets. Clearly $\mu$ is outer regular on all open sets, so $\calA$ contains all open sets.
 
-\begin{proposition}
+    Finally let $(A_n)_{n \in \naturals}$ be a sequence in $\calA$, and let $\epsilon > 0$. For each $n$ choose an open $U_n$ and a closed $F_n$ such that $F_n \subseteq A_n \subseteq U_n$ and $\mu(U_n \setminus F_n) < \epsilon/2^n$. Letting $F = \bigunion_{n \in \naturals} F_n$ and $U = \bigunion_{n \in \naturals} U_n$ we thus have $F \subseteq \bigunion_{n \in \naturals} A_n \subseteq U$, and
+    %
+    \begin{equation*}
+        \mu(U \setminus F)
+            \leq \mu \Bigl( \bigunion_{n \in \naturals} (U_n \setminus F_n) \Bigr)
+            \leq \sum_{n=1}^\infty \mu(U_n \setminus F_n)
+            = \epsilon.
+    \end{equation*}
+    %
+    Finally, continuity of $\mu$ from above\footnote{Here we use that $\mu$ is finite. Note that the rest of the proof goes through if $\mu$ is only $\sigma$-finite.} shows that there is an $n \in \naturals$ such that
+    %
+    \begin{equation*}
+        \mu \Bigl( U \setminus \bigunion_{k=1}^n F_n \Bigr)
+            < \epsilon.
+    \end{equation*}
+    %
+    Thus $\bigunion_{n \in \naturals} A_n \in \calA$, so $\calA$ is a $\sigma$-algebra containing all open sets, hence it contains $\borel{X}$ as desired.
+\end{proof}
+
+
+\begin{remark}
+    Note that \cref{lem:G-delta-regularity} does not hold for arbitrary $\sigma$-finite measures. For instance, let $\tau$ be the counting measure on $(\reals,\borel{\reals})$, and let $\mu(A) = \tau(A \intersect \rationals)$. Then $\mu$ is a $\sigma$-finite Borel measure, but e.g. $\mu(\{0\}) = 1$, while the measure of any open set is infinite.
+\end{remark}
+
+
+\begin{lemma}
+    \label{lem:semifinite-inner-regular-condition}
+    Let $\mu$ be a semifinite Borel measure on $X$. If $\mu$ is (weakly) inner regular on all $\mu$-finite sets, then $\mu$ is (weakly) inner regular.
+\end{lemma}
+
+\begin{proof}
+    Let $A \in \borel{X}$ be a Borel set with $\mu(A) = \infty$. For any $R > 0$ there is a Borel set $B \subseteq A$ with $R < \mu(B) < \infty$. Since $\mu$ is inner regular on $B$, there is a compact set $K \subseteq B$ with $R < \mu(K)$. Since $R$ was arbitrary, this shows that $\mu$ is inner regular on $A$.
+
+    The proof is the same for weak inner regularity.
+\end{proof}
+
+
+Furthermore, we say that a Borel measure $\mu$ on $X$ is \emph{tight} if for every $\epsilon > 0$ there is a compact set $K$ such that $\mu(X \setminus K) < \epsilon$. This property is especially interesting when $\mu$ is finite. We have the following relationships between tightness and inner regularity:
+
+\begin{lemma}
+    \label{lem:tightness-vs-inner-regularity}
+    Let $\mu$ be a Borel measure on $X$.
+    %
+    \begin{enumerate}
+        \item If $\mu$ is tight, then $\mu$ is inner regular on $X$.
+        \item If $\mu$ is finite and inner regular on $X$, then $\mu$ is tight.
+        \item If $\mu$ is tight and weakly inner regular on a set $A \in \borel{X}$ with finite $\mu$-measure, then $\mu$ is (strongly) inner regular on $A$.
+    \end{enumerate}
+\end{lemma}
+
+\begin{proof}
+    The first two claims are obvious. For the third, assume that $\mu$ is tight and weakly inner regular on $A$. Let $\epsilon > 0$ and choose a closed set $F \subseteq A$ and a compact set $K \subseteq X$ such that $\mu(A \setminus F) < \epsilon$ and $\mu(X \setminus K) < \epsilon$. Then
+    %
+    \begin{equation*}
+        A \setminus (K \intersect F)
+            = (A \setminus K) \union (A \setminus F)
+            \subseteq (X \setminus K) \union (A \setminus F),
+    \end{equation*}
+    %
+    and hence $\mu(A \setminus (K \intersect F)) \leq 2\epsilon$.
+\end{proof}
+
+
+
+A Borel measure $\mu$ on $X$ is called \emph{locally finite} if every point has a neighbourhood $U$ with $\mu(U) < \infty$. This makes sense on non-Hausdorff spaces but we do not consider local finiteness in this generality. We have the following characterisation of local finiteness:
+
+\begin{lemma}
     \label{thm:local-finiteness-compacts}
     If a Borel measure on $X$ is locally finite, then it is finite on all compact sets. The converse is also true if $X$ is locally compact.
-\end{proposition}
+\end{lemma}
 
 \begin{proof}
     Let $\mu$ be a locally finite Borel measure on $X$, and let $K \subseteq X$ be compact. Every $x \in K$ has an open neighbourhood $U_x$ with $\mu(U_x) < \infty$. The collection $\set{U_x}{x \in K}$ is an open cover of $K$, so it has a finite subcover, say $U_{x_1}, \ldots, U_{x_n}$. But then
@@ -272,60 +516,86 @@ A Borel measure $\mu$ on $X$ is called \emph{locally finite} if every point has 
 \end{proof}
 
 
+\begin{proposition}
+    \label{prop:semifinite-agree-on-inner-regular-sets}
+    Let $\mu$ be a Borel measure on $X$ that is finite on compact sets. If $\mu$ is inner regular on $A \in \borel{X}$, then $\mu_0$ is also inner regular on $A$ and $\mu(A) = \mu_0(A)$.
+\end{proposition}
+%
+Since every Borel measure is inner regular on compact sets, this in particular says that $\mu$ and $\mu_0$ agree on compact sets, though this follows directly from finiteness of $\mu$ on compacta.
+
+\begin{proof}
+    The first claim is obvious since $\mu$ and $\mu_0$ agree on compact sets because $\mu$ is finite on compacta. For the second claim, since $\mu_0 \leq \mu$ in general we only need to show that $\mu_0(A) \geq \mu(A)$. Since $\mu$ is inner regular on $A$, there exists a sequence $(K_n)_{n \in \naturals}$ of compact subsets of $A$ such that $\mu(A) = \lim_{n \to \infty} \mu(K_n)$. It follows that
+    %
+    \begin{equation*}
+        \mu(A)
+            = \lim_{n \to \infty} \mu(K_n)
+            = \lim_{n \to \infty} \mu_0(K_n)
+            \leq \mu_0(A),
+    \end{equation*}
+    %
+    as desired.
+\end{proof}
+
+
+While general measures can be finite, semifinite or $\sigma$-finite, Borel measures can also be locally finite or finite on compacta. There are of course relationships between these properties depending on the topology on the underlying set, and we list some of them below.
+
+\begin{proposition}
+    A Borel measure $\mu$ on $X$ is $\sigma$-finite if one of the following is satisfied:
+    %
+    \begin{enumerate}
+        \item $X$ is Lindelöf and $\mu$ is locally finite.
+        \item $X$ is $\sigma$-compact and $\mu$ is finite on compacta.
+    \end{enumerate}
+\end{proposition}
+
+
+
 \section{Borel measures on Polish spaces}
 
-\begin{lemma}
-    \label{thm:metrisable-almost-regular}
-    Let $\mu$ be a finite Borel measure on a metrisable space $X$. Then $\mu$ is outer regular, and for all $A \in \borel{X}$ we have
-    %
-    \begin{equation}
-        \label{eq:closed-inner-regularity}
-        \mu(A)
-            = \sup \set{\mu(F)}{ \text{$F \subseteq A$ and $F$ is closed} }.
-    \end{equation}
-\end{lemma}
-%
-Thus such a measure $\mu$ is \emph{almost} inner regular. In [reference] we will see that $\mu$ is indeed regular on Polish spaces.
+% \begin{lemma}
+%     \label{thm:metrisable-almost-regular}
+%     Let $\mu$ be a finite Borel measure on a metrisable space $X$. Then $\mu$ is outer regular, and for all $A \in \borel{X}$ we have
+%     %
+%     \begin{equation}
+%         \label{eq:closed-inner-regularity}
+%         \mu(A)
+%             = \sup \set{\mu(F)}{ \text{$F \subseteq A$ and $F$ is closed} }.
+%     \end{equation}
+% \end{lemma}
+% %
+% Thus such a measure $\mu$ is \emph{almost} inner regular. In [reference] we will see that $\mu$ is indeed regular on Polish spaces.
 
-\newcommand{\calA}{\mathcal{A}}
+% \begin{proof}
+%     We first show that $\mu$ is outer regular. Let $\calA$ be the subcollection of $\borel{X}$ consisting of sets on which $\mu$ is outer regular. Assume first that $A$ is closed and, choosing a metric $\rho$ on $X$, let $A^\delta = \set{x \in X}{\rho(x,A) < \delta}$ for $\delta > 0$. These sets are open and contain $A$, and continuity (and finiteness) of $\mu$ shows that they approximate $A$ from above in measure. Hence $\calA$ contains all closed sets, and it thus suffices to show that $\calA$ is a $\sigma$-algebra.
+
+%     It is easy to see that $\calA$ is closed under complementation. Now let $(A_n)_{n \in \naturals}$ be a sequence of sets in $\calA$, and let $\epsilon > 0$. Choose open sets $U_n$ such that $A_n \subseteq U_n$, and such that $\mu(U_n \setminus A_n) \leq \epsilon/2^n$. Letting $U = \bigunion_{n \in \naturals} U_n$ and $A = \bigunion_{n \in \naturals} A_n$ it follows that
+%     %
+%     \begin{equation*}
+%         \mu(U \setminus A)
+%             \leq \mu \Bigl( \bigunion_{n \in \naturals} (U_n \setminus A_n) \Bigr)
+%             \leq \sum_{n=1}^\infty \mu(U_n \setminus A_n)
+%             = \epsilon.
+%     \end{equation*}
+%     %
+%     Since $\epsilon$ was arbitrary, $A \in \calA$, and so $\calA$ is a $\sigma$-algebra.
+
+%     Finally we show that $\mu$ satisfies \eqref{eq:closed-inner-regularity}. Let $A \in \borel{X}$, and let $\epsilon > 0$. Then $A^c$ is also a Borel set, so there is an open set $U \supseteq A^c$ such that $\mu(U \setminus A^c) < \epsilon$. But $U \setminus A^c = A \setminus U^c$, and $U^c$ is a closed set contained in $A$, proving \eqref{eq:closed-inner-regularity}.
+% \end{proof}
+% %
+% The proof yields more than the theorem, namely that any finite outer regular Borel measure $\mu$ on \emph{any} topological space $X$ has the property \eqref{eq:closed-inner-regularity}. We shall not need this fact in the sequel.
+
+
+\begin{theorem}
+    Every locally finite Borel measure on a Polish space is regular.
+\end{theorem}
+
+% Add to framedtheorems.sty
+\newcommand{\mylistlabelfont}[1]{{\normalfont\color{linkcolor}\textit{#1}:}}
+\newlist{proofsec}{description}{1}
+\setlist[proofsec]{leftmargin=0pt, parsep=0pt, listparindent=\parindent, font=\mylistlabelfont}
 
 \begin{proof}
-    We first show that $\mu$ is outer regular. Let $\calA$ be the subcollection of $\borel{X}$ consisting of sets on which $\mu$ is outer regular. Assume first that $A$ is closed and, choosing a metric $\rho$ on $X$, let $A^\delta = \set{x \in X}{\rho(x,A) < \delta}$ for $\delta > 0$. These sets are open and contain $A$, and continuity (and finiteness) of $\mu$ shows that they approximate $A$ from above in measure. Hence $\calA$ contains all closed sets, and it thus suffices to show that $\calA$ is a $\sigma$-algebra.
-
-    It is easy to see that $\calA$ is closed under complementation. Now let $(A_n)_{n \in \naturals}$ be a sequence of sets in $\calA$, and let $\epsilon > 0$. Choose open sets $U_n$ such that $A_n \subseteq U_n$, and such that $\mu(U_n \setminus A_n) \leq \epsilon/2^n$. Letting $U = \bigunion_{n \in \naturals} U_n$ and $A = \bigunion_{n \in \naturals} A_n$ it follows that
-    %
-    \begin{equation*}
-        \mu(U \setminus A)
-            \leq \mu \Bigl( \bigunion_{n \in \naturals} (U_n \setminus A_n) \Bigr)
-            \leq \sum_{n=1}^\infty \mu(U_n \setminus A_n)
-            = \epsilon.
-    \end{equation*}
-    %
-    Since $\epsilon$ was arbitrary, $A \in \calA$, and so $\calA$ is a $\sigma$-algebra.
-
-    Finally we show that $\mu$ satisfies \eqref{eq:closed-inner-regularity}. Let $A \in \borel{X}$, and let $\epsilon > 0$. Then $A^c$ is also a Borel set, so there is an open set $U \supseteq A^c$ such that $\mu(U \setminus A^c) < \epsilon$. But $U \setminus A^c = A \setminus U^c$, and $U^c$ is a closed set contained in $A$, proving \eqref{eq:closed-inner-regularity}.
-\end{proof}
-%
-The proof yields more than the theorem, namely that any finite outer regular Borel measure $\mu$ on \emph{any} topological space $X$ has the property \eqref{eq:closed-inner-regularity}. We shall not need this fact in the sequel.
-
-
-\begin{lemma}
-    \label{thm:Polish-regular}
-    Every finite Borel measure $\mu$ on a Polish space $X$ is regular.
-\end{lemma}
-
-\begin{proof}
-    It suffices to prove for every $\epsilon > 0$ the existence of a compact set $K \subseteq X$ such that $\mu(X \setminus K) \leq \epsilon$ (i.e. that $\mu$ is \emph{tight}). If $A \in \borel{X}$, then by \cref{thm:metrisable-almost-regular} there is a closed set $F \subseteq A$ such that $\mu(A \setminus F) \leq \epsilon$. But then
-    %
-    \begin{equation*}
-        A \setminus (K \intersect F)
-            = (A \setminus K) \union (A \setminus F)
-            \subseteq (X \setminus K) \union (A \setminus F),
-    \end{equation*}
-    %
-    and hence $\mu(A \setminus (K \intersect F)) \leq 2\epsilon$.
-
-    Let $\epsilon > 0$. Since $X$ is Lindelöf there is for every $k \in \naturals$ a sequence $(B_n^k)_{n \in \naturals}$ of open balls of radius $1/k$ covering $X$. By continuity of $\mu$ there exists for each $k$ an $N_k \in \naturals$ such that
+    We first prove that if $\mu$ is a finite Borel measure on a Polish space $X$, then $\mu$ is regular. By \cref{lem:G-delta-regularity} and \cref{lem:tightness-vs-inner-regularity} it suffices to show that $\mu$ is tight. Let $\epsilon > 0$. Since $X$ is Lindelöf there is for every $k \in \naturals$ a sequence $(B_n^k)_{n \in \naturals}$ of open balls of radius $1/k$ covering $X$. By continuity of $\mu$ there exists for each $k$ an $N_k \in \naturals$ such that
     %
     \begin{equation*}
         \mu(X)
@@ -340,7 +610,7 @@ The proof yields more than the theorem, namely that any finite outer regular Bor
               \bigunion_{n \leq N_k} B_n^k.
     \end{equation*}
     %
-    It is easy to see that $A$ is totally bounded. It then follows that $A$ is precompact since $X$ is complete. Furthermore,
+    It is easy to see that $A$ is totally bounded. It then follows that $A$ is relatively compact since $X$ is complete. Furthermore,
     %
     \begin{equation*}
         \mu(X \setminus \closure{A})
@@ -350,25 +620,8 @@ The proof yields more than the theorem, namely that any finite outer regular Bor
     \end{equation*}
     %
     This proves the claim.
-\end{proof}
 
-
-\begin{theorem}
-    Every locally finite Borel measure $\mu$ on a Polish space $X$ is $\sigma$-finite and regular.
-\end{theorem}
-
-% Add to framedtheorems.sty
-\newcommand{\mylistlabelfont}[1]{{\normalfont\color{linkcolor}\textit{#1}:}}
-\newlist{proofsec}{description}{1}
-\setlist[proofsec]{leftmargin=0pt, parsep=0pt, listparindent=\parindent, font=\mylistlabelfont}
-
-\begin{proof}
-\begin{proofsec}
-    \item[$\sigma$-finiteness]
-    Every point $x \in X$ has an open neighbourhood $U_x$ of finite $\mu$-measure. Since $X$ is Lindelöf, countably many of the neighbourhoods cover $X$, say $(U_{x_n})_{n \in \naturals}$. Let $V_n = \bigunion_{k \leq n} U_{x_k}$. Then $V_n \uparrow X$, and $\mu(V_n) < \infty$.
-
-    \item[Inner regularity]
-    For $n \in \naturals$ define a finite measure $\mu_n$ on $X$ by $\mu_n(A) = \mu(A \intersect V_n)$. Let $A \in \borel{X}$ and $\epsilon > 0$. Then there is an $n \in \naturals$ such that $\mu(A) \leq \mu_n(A) + \epsilon$. By \cref{thm:Polish-regular} $\mu_n$ is (inner) regular, so there is a compact set $K \subseteq A$ such that $\mu_n(A) \leq \mu_n(K) + \epsilon$. In total,
+    Next let $\mu$ be locally finite, and let $(V_n)_{n \in \naturals}$ be an open covering of $X$ such that $V_n \uparrow X$.\footnote{The existence of such a covering follows since $X$ is Lindelöf and $\mu$ is locally finite.} For $n \in \naturals$ define a finite measure $\mu_n$ on $X$ by $\mu_n(A) = \mu(A \intersect V_n)$. Let $A \in \borel{X}$ and $\epsilon > 0$. Then there is an $n \in \naturals$ such that $\mu(A) \leq \mu_n(A) + \epsilon$. Since $\mu_n$ is inner regular by the above, there is a compact set $K \subseteq A$ such that $\mu_n(A) \leq \mu_n(K) + \epsilon$. In total,
     %
     \begin{equation*}
         \mu(A)
@@ -378,8 +631,7 @@ The proof yields more than the theorem, namely that any finite outer regular Bor
     %
     so $\mu$ is inner regular on $A$ since $\epsilon$ was arbitrary.
 
-    \item[Outer regularity]
-    Let $A \in \borel{X}$, and let $\epsilon > 0$. For $n \in \naturals$ there exists an open set $U_n \supseteq A$ such that $\mu_n(U_n \setminus A) \leq \epsilon/2^n$ by \cref{thm:Polish-regular}. If we let $U = \bigunion_{n\in\naturals} U_n \intersect V_n$, then
+    Next, for $n \in \naturals$ there exists an open set $U_n \supseteq A$ such that $\mu_n(U_n \setminus A) \leq \epsilon/2^n$ since $\mu_n$ is outer regular by the above. If we let $U = \bigunion_{n\in\naturals} U_n \intersect V_n$, then
     %
     \begin{equation*}
         A
@@ -404,7 +656,6 @@ The proof yields more than the theorem, namely that any finite outer regular Bor
     \end{equation*}
     %
     so $\mu$ is outer regular on $A$.
-\end{proofsec}
 \end{proof}
 
 
@@ -453,129 +704,220 @@ This is Proposition~7.5 in \textcite{folland2007}, though Folland only considers
     Now assume that $\mu(A) = \infty$ and that there exists an increasing sequence $(A_n)_{n \in \naturals}$ in $\borel{X}$ with $\mu(A_n) < \infty$, and whose union is $A$. It follows by continuity of $\mu$ that $\mu(A_n) \to \infty$ as $n \to \infty$, so for any $R > 0$ there is an $n \in \naturals$ such that $\mu(A_n) > R$. By inner regularity on $A_n$ there exists a compact set $K \subset A_n$ such that $\mu(K) > R$. Hence $\mu$ is also inner regular on $A$.
 \end{proof}
 
-\begin{lemma}
-    \label{thm:Radon-agree-on-open-sets}
-    Let $\mu$ be an outer Radon measure on $X$, and let $\nu$ be the essential measure associated with $\mu$. Then $\nu(U) = \mu(U)$ for all open $U \subseteq X$.
-\end{lemma}
+
+\begin{proposition}
+    \label{prop:inner-Radon-semifinite}
+    Every inner Radon measure is semifinite.
+\end{proposition}
 
 \begin{proof}
-    Let $U \subseteq X$ be open. Since $\nu \leq \mu$ in general, we only need to show that $\nu(U) \geq \mu(U)$. Since $\mu$ is inner regular on $U$, there exists a sequence $(K_n)_{n \in \naturals}$ of compact subsets of $U$ such that $\mu(U) = \lim_{n \to \infty} \mu(K_n)$. Furthermore, $\mu(K_n) < \infty$ because $\mu$ is locally finite, so since $\nu$ and $\mu$ agree when $\mu$ is finite it follows that
-    %
-    \begin{equation*}
-        \mu(U)
-            = \lim_{n \to \infty} \mu(K_n)
-            = \lim_{n \to \infty} \nu(K_n)
-            \leq \nu(U),
-    \end{equation*}
-    %
-    as desired.
+    Let $\nu$ be an inner Radon measure, and let $A$ be a Borel set with $\nu(A) = \infty$. By local finiteness, $\nu$ is finite on compacta. Hence, by inner regularity on $A$, $A$ has compact subsets of arbitrarily large finite $\nu$-measure. In particular, $A$ has a compact subset $K$ with $0 < \nu(K) < \infty$ as claimed.
 \end{proof}
 
 
-We denote the set of outer Radon measures on $X$ by $\radonout(X)$ and the set of inner Radon measures by $\radonin(X)$. Define maps $E \colon \radonout(X) \to \radonin(X)$ and $P \colon \radonin(X) \to \radonout(X)$, where $E$ maps an outer Radon measure to the corresponding essential measure, and $P$ maps an inner Radon measure to the corresponding principal measure.
-
-\begin{theorem}
-    \label{thm:Radon-pair-inverses}
-    The maps $E$ and $P$ are well-defined and each other's inverses.
-\end{theorem}
-% Maybe pull some things out as lemmas.
+\begin{proposition}
+    If $\mu$ is an outer Radon measure, then $\mu_0$ is an inner Radon measure.
+\end{proposition}
 
 \begin{proof}
-\begin{proofsec}
-    \item[Well-definition of $E$]
-    Let $\mu$ be an outer Radon measure on $X$, and let $\nu$ be the associated essential measure. If $A \in \borel{X}$ and $\mu(A) < \infty$, then $\mu$ is inner regular on $A$ by \cref{thm:outer-Radon-inner-regular-on-finites}. But since $\mu$ and $\nu$ agree on sets with finite $\mu$-measure, $\nu$ is also inner regular on $A$.
+    Clearly $\mu_0$ is locally finite. By \cref{lem:semifinite-inner-regular-condition} it thus suffices to show that $\mu_0$ is inner regular on every $\mu_0$-finite set, so let $A$ be such a set. By \cref{lem:semifinite-agree-with-original-measure} there is a Borel set $B \subseteq A$ such that $\mu_0(A) = \mu(B)$. But by \cref{thm:outer-Radon-inner-regular-on-finites} $\mu$ is regular on $B$, and since $\mu$ and $\mu_0$ agree on compacta, it follows that $\mu_0$ is inner regular on $A$.
+\end{proof}
 
-    Similarly, every point in $X$ has a neighbourhood with finite $\mu$-measure, so this neighbourhood also has finite $\nu$-measure. Thus $\nu$ is an inner Radon measure.
 
-    \item[Well-definition of $P$]
-    Let $\nu$ be an inner Radon measure on $X$ with associated principal measure $\mu$. We first show that $\mu$ and $\nu$ agree on $\mu$-finite sets, so let $A \in \borel{X}$ with $\mu(A) < \infty$. Clearly $\nu(A) \leq \mu(A)$, so we prove the other inequality. Let $U \supseteq A$ be an open set with $\nu(U) < \infty$. Then also $\nu(U \setminus A) < \infty$, so for $\epsilon > 0$ there exists a compact set $K \subseteq U \setminus A$ with $\nu(U \setminus A) \leq \nu(K) + \epsilon$ by inner regularity. Then $V = U \setminus K$ is an open set containing $A$, so
+% \begin{lemma}
+%     \label{thm:Radon-agree-on-open-sets}
+%     Let $\mu$ be an outer Radon measure on $X$, and let $\nu$ be the essential measure associated with $\mu$. Then $\nu(U) = \mu(U)$ for all open $U \subseteq X$.
+% \end{lemma}
+
+% \begin{proof}
+%     Let $U \subseteq X$ be open. Since $\nu \leq \mu$ in general, we only need to show that $\nu(U) \geq \mu(U)$. Since $\mu$ is inner regular on $U$, there exists a sequence $(K_n)_{n \in \naturals}$ of compact subsets of $U$ such that $\mu(U) = \lim_{n \to \infty} \mu(K_n)$. Furthermore, $\mu(K_n) < \infty$ because $\mu$ is locally finite, so since $\nu$ and $\mu$ agree when $\mu$ is finite it follows that
+%     %
+%     \begin{equation*}
+%         \mu(U)
+%             = \lim_{n \to \infty} \mu(K_n)
+%             = \lim_{n \to \infty} \nu(K_n)
+%             \leq \nu(U),
+%     \end{equation*}
+%     %
+%     as desired.
+% \end{proof}
+
+
+\begin{proposition}
+    \label{prop:inner-regular-yields-outer-regular}
+    If $\nu$ is inner regular on all $\nu$-finite sets, then $\nu^+$ is an outer regular Borel measure. Also, $\nu \leq \nu^+$, and for $A \in \borel{X}$ with $\nu^+(A) < \infty$ we have $\nu(A) = \nu^+(A)$.
+\end{proposition}
+%
+Recall that $\nu^+$ is the outer measure $\nu^*$ restricted to $\borel{X}$.
+
+\begin{proof}
+    We first show that $\nu^+$ and $\nu$ agree on $\nu^+$-finite sets, so let $A \in \borel{X}$ with $\nu^+(A) < \infty$. Clearly $\nu(A) \leq \nu^+(A)$, so we prove the other inequality. Let $U \supseteq A$ be an open set with $\nu(U) < \infty$. Then also $\nu(U \setminus A) < \infty$, so for $\epsilon > 0$ there exists a compact set $K \subseteq U \setminus A$ with $\nu(U \setminus A) \leq \nu(K) + \epsilon$ by inner regularity. Then $V = U \setminus K$ is an open set containing $A$, so
     %
     \begin{equation*}
-        \mu(A)
+        \nu^+(A)
             \leq \nu(V)
             = \nu(A) + \nu(U \setminus A) - \nu(K)
             \leq \nu(A) + \epsilon.
     \end{equation*}
     %
-    Since $\epsilon$ was arbitrary, it follows that $\mu(A) \leq \nu(A)$.
+    Since $\epsilon$ was arbitrary, it follows that $\nu^+(A) \leq \nu(A)$.
 
-    Next we show that $\mu$ is $\sigma$-additive, so let $(A_n)_{n \in \naturals}$ be a sequence of disjoints sets in $\borel{X}$. For $\epsilon > 0$ there exists a sequence $(U_n)_{n \in \naturals}$ of open sets with $A_n \subseteq U_n$ such that $\nu(U_n) \leq \mu(A_n) + \epsilon$. It follows that
+    We next show that every open set is $\nu^*$-measurable. That is, for $U \subseteq X$ open and $E \subseteq X$ with $\nu^*(E) < \infty$ we show that
     %
     \begin{equation*}
-        \mu \Bigl( \bigunion_{n \in \naturals} A_n \Bigr)
-            \leq \nu \Bigl( \bigunion_{n \in \naturals} U_n \Bigr)
-            = \sum_{n=1}^\infty \nu(U_n)
-            \leq \sum_{n=1}^\infty \mu(A_n) + \epsilon.
+        \nu^*(E)
+            \geq \nu^*(E \intersect U) + \nu^*(E \intersect U^c).
     \end{equation*}
     %
-    So $\mu$ is countably subadditive since $\epsilon$ was arbitrary. The opposite inequality is obvious if $\mu( \bigunion_{n \in \naturals} A_n ) = \infty$, and if not then the sets $A_n$ also have finite $\mu$-measure. Hence
+    This is clear when $E$ is open (indeed, when $E$ is Borel), since then $\nu^*$ can be replaced first with $\nu^+$ and then with $\nu$. For arbitrary $E$ there is an open $V \supseteq E$ such that $\nu^*(V) = \nu(V) \leq \nu^*(E) + \epsilon$, which implies that
+    %
+    \begin{align*}
+        \nu^*(E) + \epsilon
+            \geq \nu^*(V)
+            &\geq \nu^*(V \intersect U) + \nu^*(V \intersect U^c) \\
+            &\geq \nu^*(E \intersect U) + \nu^*(E \intersect U^c).
+    \end{align*}
+    %
+    Since $\epsilon$ was arbitrary, it follows that $U$ is $\nu^*$-measurable. Carathéodory's theorem then implies that $\nu^+$ is a measure.
+
+    Alternatively, we can prove directly that $\nu^+$ is countably additive: Let $(A_n)_{n \in \naturals}$ be a sequence of disjoints sets in $\borel{X}$. For $\epsilon > 0$ there exists a sequence $(U_n)_{n \in \naturals}$ of open sets with $A_n \subseteq U_n$ such that $\nu(U_n) \leq \nu^+(A_n) + \epsilon/2^n$. It follows that
     %
     \begin{equation*}
-        \mu \Bigl( \bigunion_{n \in \naturals} A_n \Bigr)
+        \nu^+ \Bigl( \bigunion_{n \in \naturals} A_n \Bigr)
+            \leq \nu \Bigl( \bigunion_{n \in \naturals} U_n \Bigr)
+            \leq \sum_{n=1}^\infty \nu(U_n)
+            \leq \sum_{n=1}^\infty \nu^+(A_n) + \epsilon.
+    \end{equation*}
+    %
+    So $\nu^+$ is countably subadditive since $\epsilon$ was arbitrary. The opposite inequality is obvious if $\nu^+( \bigunion_{n \in \naturals} A_n ) = \infty$, and if not then the sets $A_n$ also have finite $\nu^+$-measure. Hence
+    %
+    \begin{equation*}
+        \nu^+ \Bigl( \bigunion_{n \in \naturals} A_n \Bigr)
             = \nu \Bigl( \bigunion_{n \in \naturals} A_n \Bigr)
             = \sum_{n=1}^\infty \nu(A_n)
-            = \sum_{n=1}^\infty \mu(A_n).
+            = \sum_{n=1}^\infty \nu^+(A_n).
     \end{equation*}
     %
-    Thus $\mu$ is in fact a measure.
+    Thus $\nu^+$ is countably additive.
 
-    Finally, $\mu$ is clearly locally finite since $\nu$ is, and since $\mu$ and $\nu$ agree on $\mu$-finite sets, outer regularity follows easily from the definition of $\mu$.
+    Finally, the definition of $\nu^+$ immediately implies that it is outer regular.
+\end{proof}
 
-    \item[$P \circ E = \id$]
-    Let $\mu$ be an outer Radon measure, $\nu = E(\mu)$ its corresponding essential measure, and $\mu' = P(\nu)$ the principal measure associated with $\nu$. We must show that $\mu = \mu'$.
 
-    Let $A \in \borel{X}$. Since $\mu$ is outer regular,
+\begin{corollary}
+    If $\nu$ is an inner Radon measure, then $\nu^+$ is an outer Radon measure.
+\end{corollary}
+
+\begin{proof}
+    It follows from \cref{prop:inner-regular-yields-outer-regular} that $\nu^+$ is outer regular, and $\nu^+$ is locally finite since $\nu$ and $\nu^+$ agree on all sets of finite $\nu^+$-measure. Finally, $\nu$ and $\nu^+$ agree on all open sets by definition of $\nu^+$, so $\nu^+$ is inner regular on open sets.
+\end{proof}
+
+
+We denote the set of outer Radon measures on $X$ by $\radonout(X)$ and the set of inner Radon measures by $\radonin(X)$. The above results imply that there are maps $\radonout(X) \to \radonin(X)$ and $\radonin(X) \to \radonout(X)$ given by $\mu \mapsto \mu_0$ and $\nu \mapsto \nu^+$ respectively. These have the following fundamental property:
+
+\begin{theorem}
+    \label{thm:Radon-pair-inverses}
+    The maps $\mu \mapsto \mu_0$ and $\nu \mapsto \nu^+$ are each other's inverses.
+\end{theorem}
+% Maybe pull some things out as lemmas.
+
+\begin{proof}
+\begin{proofsec}
+    % \item[Well-definition of $E$]
+    % Let $\mu$ be an outer Radon measure on $X$, and let $\nu$ be the associated essential measure. If $A \in \borel{X}$ and $\mu(A) < \infty$, then $\mu$ is inner regular on $A$ by \cref{thm:outer-Radon-inner-regular-on-finites}. But since $\mu$ and $\nu$ agree on sets with finite $\mu$-measure, $\nu$ is also inner regular on $A$.
+
+    % Similarly, every point in $X$ has a neighbourhood with finite $\mu$-measure, so this neighbourhood also has finite $\nu$-measure. Thus $\nu$ is an inner Radon measure.
+
+    % \item[Well-definition of $P$]
+    % Let $\nu$ be an inner Radon measure on $X$ with associated principal measure $\mu$. We first show that $\mu$ and $\nu$ agree on $\mu$-finite sets, so let $A \in \borel{X}$ with $\mu(A) < \infty$. Clearly $\nu(A) \leq \mu(A)$, so we prove the other inequality. Let $U \supseteq A$ be an open set with $\nu(U) < \infty$. Then also $\nu(U \setminus A) < \infty$, so for $\epsilon > 0$ there exists a compact set $K \subseteq U \setminus A$ with $\nu(U \setminus A) \leq \nu(K) + \epsilon$ by inner regularity. Then $V = U \setminus K$ is an open set containing $A$, so
+    % %
+    % \begin{equation*}
+    %     \mu(A)
+    %         \leq \nu(V)
+    %         = \nu(A) + \nu(U \setminus A) - \nu(K)
+    %         \leq \nu(A) + \epsilon.
+    % \end{equation*}
+    % %
+    % Since $\epsilon$ was arbitrary, it follows that $\mu(A) \leq \nu(A)$.
+
+    % Next we show that $\mu$ is $\sigma$-additive, so let $(A_n)_{n \in \naturals}$ be a sequence of disjoints sets in $\borel{X}$. For $\epsilon > 0$ there exists a sequence $(U_n)_{n \in \naturals}$ of open sets with $A_n \subseteq U_n$ such that $\nu(U_n) \leq \mu(A_n) + \epsilon$. It follows that
+    % %
+    % \begin{equation*}
+    %     \mu \Bigl( \bigunion_{n \in \naturals} A_n \Bigr)
+    %         \leq \nu \Bigl( \bigunion_{n \in \naturals} U_n \Bigr)
+    %         = \sum_{n=1}^\infty \nu(U_n)
+    %         \leq \sum_{n=1}^\infty \mu(A_n) + \epsilon.
+    % \end{equation*}
+    % %
+    % So $\mu$ is countably subadditive since $\epsilon$ was arbitrary. The opposite inequality is obvious if $\mu( \bigunion_{n \in \naturals} A_n ) = \infty$, and if not then the sets $A_n$ also have finite $\mu$-measure. Hence
+    % %
+    % \begin{equation*}
+    %     \mu \Bigl( \bigunion_{n \in \naturals} A_n \Bigr)
+    %         = \nu \Bigl( \bigunion_{n \in \naturals} A_n \Bigr)
+    %         = \sum_{n=1}^\infty \nu(A_n)
+    %         = \sum_{n=1}^\infty \mu(A_n).
+    % \end{equation*}
+    % %
+    % Thus $\mu$ is in fact a measure.
+
+    % Finally, $\mu$ is clearly locally finite since $\nu$ is, and since $\mu$ and $\nu$ agree on $\mu$-finite sets, outer regularity follows easily from the definition of $\mu$.
+
+    \item[$(\mu_0)^+ = \mu$]
+    Let $\mu$ be an outer Radon measure, and let $A \in \borel{X}$. Since $\mu$ is outer regular,
     %
     \begin{equation*}
         \mu(A)
             = \inf \set{\mu(U)}{\text{$U$ open and $A \subseteq U$}}.
     \end{equation*}
     %
-    Comparing this with the definition of $\mu'$ and recalling that $\nu \leq \mu$, we find that $\mu'(A) \leq \mu(A)$.
+    Comparing this with the definition of $(\mu_0)^+$ and recalling that $\mu_0 \leq \mu$, we find that $(\mu_0)^+(A) \leq \mu(A)$.
 
-    For the opposite inequality, let $\epsilon > 0$ and let $U \supseteq A$ be an open set such that $\nu(U) \leq \mu'(A) + \epsilon$. Because $\nu(U) = \mu(U)$ by \cref{thm:Radon-agree-on-open-sets}, we have
+    For the opposite inequality, let $\epsilon > 0$ and let $U \supseteq A$ be an open set such that $\mu_0(U) \leq (\mu_0)^+(A) + \epsilon$. Because $\mu_0(U) = \mu(U)$ by \cref{prop:semifinite-agree-on-inner-regular-sets}, we have
     %
     \begin{equation*}
-        \mu'(A) + \epsilon
-            \geq \nu(U)
+        (\mu_0)^+(A) + \epsilon
+            \geq \mu_0(U)
             = \mu(U)
             \geq \mu(A),
     \end{equation*}
     %
-    so it follows that $\mu'(A) \geq \mu(A)$ since $\epsilon$ was arbitrary.
+    so it follows that $(\mu_0)^+(A) \geq \mu(A)$ since $\epsilon$ was arbitrary.
 
-    \item[$E \circ P = \id$]
-    Conversely, let $\nu$ be an inner Radon measure and let $\mu = P(\nu)$ and $\nu' = E(\mu)$. Let $A \in \borel{X}$ and notice that
+    \item[$(\nu^+)_0 = \nu$]
+    Conversely, let $\nu$ be an inner Radon measure and let $A \in \borel{X}$. Notice that
     %
     \begin{align*}
         \nu(A)
             &= \sup \set{\nu(K)}{ \text{$K$ compact and $K \subseteq A$} } \\
-            &= \sup \set{\mu(K)}{ \text{$K$ compact and $K \subseteq A$} } \\
-            &= \sup \set{\mu(B)}{ \text{$B \in \borel{X}$, $B \subseteq A$ and $\mu(B) < \infty$} } \\
-            &= \nu'(A).
+            &= \sup \set{\nu^+(K)}{ \text{$K$ compact and $K \subseteq A$} } \\
+            &= \sup \set{\nu^+(B)}{ \text{$B \in \borel{X}$, $B \subseteq A$ and $\nu^+(B) < \infty$} } \\
+            &= (\nu^+)_0(A).
     \end{align*}
     %
-    The second and third equalities follow since $\mu$ is locally finite, hence finite on compact sets by \cref{thm:local-finiteness-compacts}, so $\nu(K) = \mu(K) < \infty$.
+    The first equality follows by inner regularity of $\nu$. The second equality follows since $\nu^+$ is locally finite, hence finite on compact sets by \cref{thm:local-finiteness-compacts}, so $\nu(K) = \nu^+(K)$ by \cref{prop:inner-regular-yields-outer-regular}. The third follows similarly, where we also use that $\nu^+$ is outer Radon along with \cref{thm:outer-Radon-inner-regular-on-finites}, to ensure that the third supremum is no larger than the second. The final equality follows by definition of $(\nu^+)_0$.
 \end{proofsec}
 \end{proof}
 
 
 \begin{proposition}
-    If $\mu$ is an outer Radon measure that is also inner regular, then $E(\mu) = \mu$. Conversely, if $\nu$ is an inner Radon measure that is also outer regular, then $P(\nu) = \nu$.
+    If $\mu$ is an outer Radon measure that is also inner regular, then $\mu_0 = \mu$. Conversely, if $\nu$ is an inner Radon measure that is also outer regular, then $\nu^+ = \nu$.
 \end{proposition}
 
 \begin{proof}
-    Assume that $\mu$ is an outer Radon measure, let $\nu = E(\mu)$, and let $A \in \borel{X}$. Then $\nu \leq \mu$ with equality on $\mu$-finite sets, so it suffices to prove that $\nu(A) = \infty$ if $\mu(A) = \infty$. In this case there is for any $R > 0$ a compact set $K \subseteq A$ such that $\mu(R) > R$ by inner regularity. But $\mu$ is locally finite, so $\mu(K) < \infty$ and hence $\nu(A) > R$. This holds for all $R$, so $\nu(A) = \infty$, proving the claim.
+    Note that $\mu$ is also an inner Radon measure, so by \cref{prop:inner-Radon-semifinite} it is semifinite. Hence \cref{prop:semifinite-part} implies that $\mu_0 = \mu$.
 
-    Now assume that $\nu$ is an inner Radon measure. Let $\mu = P(\nu)$, and consider $A \in \borel{X}$. As before, we only need to consider the case where $\mu(A) = \infty$. Then $\nu(U) = \infty$ for all open $U \supseteq A$. But outer regularity of $\nu$ then implies that also $\nu(A) = \infty$.
+    For the converse, $\nu$ is already an outer Radon measure, so by the above we have $\nu = \nu_0$. But then it follows that $\nu^+ = (\nu_0)^+ = \nu$.
 \end{proof}
+% Assume that $\mu$ is an outer Radon measure, let $\nu = E(\mu)$, and let $A \in \borel{X}$. Then $\nu \leq \mu$ with equality on $\mu$-finite sets, so it suffices to prove that $\nu(A) = \infty$ if $\mu(A) = \infty$. In this case there is for any $R > 0$ a compact set $K \subseteq A$ such that $\mu(R) > R$ by inner regularity. But $\mu$ is locally finite, so $\mu(K) < \infty$ and hence $\nu(A) > R$. This holds for all $R$, so $\nu(A) = \infty$, proving the claim.
+
+% Now assume that $\nu$ is an inner Radon measure. Let $\mu = P(\nu)$, and consider $A \in \borel{X}$. As before, we only need to consider the case where $\mu(A) = \infty$. Then $\nu(U) = \infty$ for all open $U \supseteq A$. But outer regularity of $\nu$ then implies that also $\nu(A) = \infty$.
 
 
 
 
 \begin{definition}[Radon pairs]
     \label{def:Radon-pairs}
-    Let $\mu$ and $\nu$ be outer and inner Radon measures respectively, such that $\nu = E(\mu)$ (or equivalently $\mu = P(\nu)$). The pair $(\mu,\nu)$ is then called a \emph{Radon pair}\footnotemark{}.
+    Let $\mu$ and $\nu$ be outer and inner Radon measures respectively, such that $\nu = \mu_0$ (or equivalently $\mu = \nu^+$). The pair $(\mu,\nu)$ is then called a \emph{Radon pair}\footnotemark{}.
 \end{definition}
 \footnotetext{Similar to principal measures, I do not believe this is standard terminology. In fact, as far as I know I have just made it up!}
 %
@@ -584,7 +926,12 @@ A Radon pair is what \textcite{schwartz1973} describes in his $R_1$ definition o
 
 \section{Locally compact Hausdorff spaces}
 
-Now let $X$ be a locally compact Hausdorff space, and let $C_c(X)$ denote the space of continuous complex-valued functions on $X$. A linear functional $I$ on $C_c(X)$ is said to be \emph{positive} if $I(f) \geq 0$ when $f \geq 0$. A Borel measure $\mu$ on $X$ is called a \emph{representing measure} for $I$ if $I(f) = \int f \dif\mu$ for all $f \in C_c(X)$.
+
+
+
+
+
+Now let $X$ be a locally compact Hausdorff space, and let $C_c(X)$ denote the space of continuous complex-valued functions on $X$ with compact support. A linear functional $I$ on $C_c(X)$ is said to be \emph{positive} if $I(f) \geq 0$ when $f \geq 0$. A Borel measure $\mu$ on $X$ is called a \emph{representing measure} for $I$ if $I(f) = \int f \dif\mu$ for all $f \in C_c(X)$.
 
 \begin{theorem}[The Riesz Representation Theorem]
     Every positive linear functional on $C_c(X)$ has a unique outer Radon representing measure.
@@ -609,6 +956,32 @@ Now let $X$ be a locally compact Hausdorff space, and let $C_c(X)$ denote the sp
 
     The final claim follows since $\mu$ is the unique outer Radon representing measure, and \cref{thm:Radon-pair-inverses} furnishes a bijection between inner and outer Radon measures on $X$. % Elementary proof as well? Bauer 29.3
 \end{proof}
+
+
+
+\begin{itemize}
+    \item LCH where every open is $\sigma$-compact: locally finite Borel => regular. (Folland 7.8, Cohn 7.2.3 ish, Bauer 29.6).
+    \item First countable Hausdorff: inner regular and finite on compacta => locally finite (Bauer 25.4)
+    \item Inner Radon on Polish => outer regular (Bauer 26.4)
+    \item $\mu$ and $\mu_0$ agree on sigma-finites (Bauer 28.5), add to first prop above if I haven't already.
+    \item Agreeing on open sets (Bauer 28.7) + compact sets?
+    \item Characteristaion of representing measures (Bauer 29.2-4)
+    \item sigma-comapct LCH: representing measures coincide (Bauer 29.6)
+    \item sigma-compact LCH: Inner Radon => outer regular (Bauer 29.7)
+    \item Representing measures for bounded forms (Bauer 29.9ff)
+    \item LCH: Finite inner Radon => outer regular (Bauer 29.11)
+    \item Uniqueness of representing measure on scLCH (Bauer 29.13)
+    \item Density of $C_c(X)$ in $L^p(\mu)$ for regular $\mu$ - only need inner regularity on open sets (Bauer 29.14 + remark after)
+    \item Regularity of completions (Cohn exercise 7.2.2)
+    \item Can use measures whose $\sigma$-algebras just include Borel, not equal it? See Cohn p. 189ff.
+    \item Cohn exercise 7.2.3 interesting
+    \item Cohn ex 7.2.5
+    \item Cohn ex 7.2.6
+    \item Cohn Baire? ex 7.2.8-11
+    \item Cohn 7.4.1 + remarks after. + ex. 7.4.3
+\end{itemize}
+
+
 
 
 \nocite{*}
